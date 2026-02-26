@@ -1,0 +1,24 @@
+.follow-btn {
+
+  margin-top: 12px;
+
+  background:
+    linear-gradient(90deg,#FF422C,#F28B18);
+
+  border: none;
+
+  color: white;
+
+  padding: 10px 16px;
+
+  border-radius: 999px;
+
+  cursor: pointer;
+
+}
+
+.follow-btn:hover {
+
+  opacity: 0.9;
+
+}

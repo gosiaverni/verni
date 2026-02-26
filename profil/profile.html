@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Profil – Verni</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../home/home.css">
+  <link rel="stylesheet" href="./profile.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./profile.js" defer></script>
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+  <div class="sidebar-inner">
+
+    <a href="../home/home.html" class="sidebar-logo">
+      <img src="../assets/verni-logo.png">
+    </a>
+
+    <nav class="sidebar-nav">
+
+      <a href="../whiteboard/whiteboard.html">
+        <img src="../assets/newproject-logo.png">
+      </a>
+
+      <a href="../saved/saved.html">
+        <img src="../assets/bookmarks-logo.png">
+      </a>
+
+      <a href="../profil/profile.html" class="active">
+        <img src="../assets/profile-logo.png">
+      </a>
+
+    </nav>
+
+  </div>
+
+</aside>
+
+
+<!-- CONTENT -->
+<div class="profile-wrapper">
+
+
+  <!-- VIEW MODE -->
+  <div id="viewMode" class="profile-header">
+
+    <img id="avatar" class="profile-avatar" src="../assets/profile-logo.png">
+
+    <div class="profile-info">
+
+      <h1 id="username"></h1>
+
+      <div id="userHandle" class="profile-handle"></div>
+
+      <div id="bio" class="profile-bio"></div>
+      <button id="followingBtn" type="button">
+  Obserwowani
+</button>
+
+      <button id="editProfileBtn">
+        Edytuj profil
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- EDIT MODE -->
+  <form id="editMode" class="profile-header hidden">
+
+    <img id="avatarPreview" class="profile-avatar hidden">
+
+    <div class="profile-info">
+
+      <label>
+        Nazwa
+        <input id="nameInput">
+      </label>
+
+      <label>
+        Handle
+        <input id="handleInput">
+      </label>
+
+      <label>
+        Bio
+        <textarea id="bioInput"></textarea>
+      </label>
+
+      <label>
+        Avatar
+        <input type="file" id="avatarInput" accept="image/*">
+      </label>
+
+      <div class="profile-buttons">
+
+        <button type="submit">
+          Zapisz
+        </button>
+
+        <button type="button" id="cancelBtn">
+          Anuluj
+        </button>
+
+      </div>
+
+    </div>
+
+  </form>
+
+
+  <!-- PROJECTS -->
+  <div class="profile-projects">
+
+    <h2>Twoje Verni</h2>
+
+    <ul id="projectsList" class="projects-grid"></ul>
+
+  </div>
+
+
+</div>
+
+</body>
+</html>

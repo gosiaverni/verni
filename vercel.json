@@ -1,0 +1,13 @@
+{
+  "outputDirectory": ".",
+  "routes": [
+    {
+      "src": "^/$",
+      "dest": "/login/index.html"
+    },
+    {
+      "src": "^/(.*)$",
+      "dest": "/$1"
+    }
+  ]
+}

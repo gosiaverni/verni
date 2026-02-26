@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Reset hasła</title>
+  <link rel="stylesheet" href="/login/login.css">
+</head>
+<body>
+
+<main class="auth-page">
+  <div class="auth-card">
+
+    <div class="auth-header">
+      <h1>Reset hasła</h1>
+      <p>Podaj email, na który wyślemy link</p>
+    </div>
+
+    <form id="resetForm" class="auth-form">
+
+      <label>
+        Email
+        <input type="email" id="resetEmail" required>
+      </label>
+
+      <button class="btn-primary" type="submit">
+        Wyślij link
+      </button>
+
+    </form>
+
+    <div class="auth-footer">
+      <span id="resetMessage"></span>
+    </div>
+
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="reset.js"></script>
+</body>
+</html>

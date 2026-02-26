@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+
+<link rel="stylesheet" href="../home/home.css">
+<link rel="stylesheet" href="./public.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+  <div class="sidebar-inner">
+
+    <a href="../home/home.html" class="sidebar-logo">
+      <img src="../assets/verni-logo.png">
+    </a>
+
+    <nav class="sidebar-nav">
+
+      <a href="../whiteboard/whiteboard.html">
+        <img src="../assets/newproject-logo.png">
+      </a>
+
+      <a href="../saved/saved.html">
+        <img src="../assets/bookmarks-logo.png">
+      </a>
+
+      <a href="../profil/profile.html">
+        <img src="../assets/profile-logo.png">
+      </a>
+
+    </nav>
+
+  </div>
+
+</aside>
+
+
+<!-- WRAPPER -->
+<div class="public-wrapper">
+
+  <div class="public-layout">
+
+    <!-- BOARD -->
+    <div id="board">
+
+      <div id="boardBackgroundLayer"></div>
+
+      <div id="boardInner"></div>
+
+    </div>
+
+
+    <!-- COMMENTS -->
+    <aside class="comments-panel">
+
+      <h3>Komentarze</h3>
+
+      <div id="commentsList"></div>
+
+      <form id="commentForm">
+
+        <input
+          id="commentInput"
+          placeholder="Dodaj komentarz..."
+        >
+
+        <button type="submit">
+          Dodaj
+        </button>
+
+      </form>
+
+    </aside>
+
+
+  </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./public.js"></script>
+
+</body>
+</html>

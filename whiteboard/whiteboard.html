@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Verni – Whiteboard</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- opcjonalna czcionka -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Caveat:wght@400;700&family=Pacifico&family=Montserrat:wght@400;700&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ======================
+     CONTROLS (GÓRA)
+====================== -->
+<header class="top-bar">
+    <div class="user-info">
+        <img id="userAvatar" class="user-avatar" alt="Avatar użytkownika">
+        <span id="userName"></span>
+    </div>
+
+  
+	<button id="goToProfile">Profil / Projekty</button>
+  <a href="../home/home.html" class="btn-home">
+  Strona główna
+</a>
+
+
+</header>
+
+
+<div id="controls">
+
+ 
+  <select id="boardSelect"></select>
+
+  <button id="btnNewBoard">➕ Nowy board</button>
+  <button id="btnRenameBoard">✏️ Zmień nazwę</button>
+   <label>
+  <input type="checkbox" id="boardPublicToggle">
+  Projekt publiczny
+</label>
+
+<button id="btnDeleteBoard">🗑️ Usuń board</button>
+
+  <button id="btnExportBoard">⬇️ Eksport PNG</button>
+  <input type="file" id="boardImageInput" accept="image/*" />
+
+<button id="addTextBtn">🅰 Tekst</button>
+
+
+  <!-- TŁO WHITEBOARDU -->
+  <input type="color" id="gradientFrom" title="Kolor / początek gradientu" />
+  <input type="color" id="gradientTo" title="Koniec gradientu" />
+
+  <select id="gradientDirection" title="Kierunek gradientu">
+    <option value="to bottom">↓</option>
+    <option value="to right">→</option>
+    <option value="to bottom right">↘</option>
+    <option value="to top">↑</option>
+  </select>
+
+  <button id="btnGradient">Gradient</button>
+  <button id="btnSolid">Kolor</button>
+  <input type="file" id="bgImageInput" accept="image/*">
+<button id="btnRemoveBgImage">Usuń tło</button>
+
+  <button id="btnZoomOut">−</button>
+<button id="btnZoomIn">+</button>
+<button id="btnResetView">Resetuj widok</button>
+
+
+</div>
+
+
+
+
+
+<!-- ======================
+     BOARD
+====================== -->
+
+<div id="board">
+  <div id="boardInner">
+    <div id="boardBackgroundLayer"></div>
+  </div>
+</div>
+
+
+<!-- ======================
+     TOOLBAR (DOŁ)
+====================== -->
+
+<div id="boardToolbar" class="board-toolbar hidden">
+
+  <button id="btnDelete" title="Usuń">🗑</button>
+  <button id="btnUp" title="Warstwa w górę">⬆</button>
+  <button id="btnDown" title="Warstwa w dół">⬇</button>
+
+  <!-- TEKST -->
+  <button id="btnTextBg" title="Tło tekstu">BG</button>
+  <button id="btnBold" title="Pogrubienie"><b>B</b></button>
+  <button id="btnItalic" title="Kursywa"><i>I</i></button>
+
+  <button id="btnAlignLeft" title="Do lewej">⬅</button>
+  <button id="btnAlignCenter" title="Wyśrodkuj">↔</button>
+  <button id="btnAlignRight" title="Do prawej">➡</button>
+
+  <!-- TRANSFORM -->
+  <button id="btnRotateLeft" title="Obrót w lewo">⟲</button>
+  <button id="btnRotateRight" title="Obrót w prawo">⟳</button>
+  <button id="btnFlipX" title="Odbicie X">⇋</button>
+  <button id="btnFlipY" title="Odbicie Y">⇵</button>
+
+  <!-- BLOKADA -->
+  <button id="btnLock" title="Zablokuj / odblokuj">🔒</button>
+
+  <!-- TEKST -->
+  <input
+    id="bgOpacityInput"
+    type="range"
+    min="0"
+    max="100"
+    step="5"
+    title="Przezroczystość tła tekstu"
+  />
+
+  <select id="fontSelect" title="Czcionka">
+  <!-- podstawowe -->
+  <option value="system-ui">System</option>
+  <option value="serif">Serif</option>
+  <option value="sans-serif">Sans</option>
+  <option value="monospace">Mono</option>
+  <option value="'League Spartan', sans-serif">League Spartan</option>
+
+  <!-- nowe – inny styl -->
+  <option value="'Playfair Display', serif">Playfair Display (elegancka)</option>
+  <option value="'Montserrat', sans-serif">Montserrat (nowoczesna)</option>
+  <option value="'Caveat', cursive">Caveat (ręczne pismo)</option>
+  <option value="'Pacifico', cursive">Pacifico (script)</option>
+  <option value="'Fira Code', monospace">Fira Code (tech)</option>
+</select>
+
+
+  <!-- OBRAZ -->
+  <button id="btnShape" title="Kształt">🔲</button>
+
+  <!-- KOLORY -->
+  <input type="color" id="textColorInput" title="Kolor tekstu" />
+
+  <input
+    id="fontSizeInput"
+    type="number"
+    min="10"
+    max="100"
+    step="2"
+    placeholder="px"
+    title="Rozmiar tekstu"
+  />
+
+</div>
+
+<!-- ======================
+     SCRIPT
+====================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- ✅ TO DODAJ -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<script src="../shared/supabaseClient.js"></script>
+<script src="script3.js"></script>
+
+
+
+
+</body>
+</html>
+
+
+

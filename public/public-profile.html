@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Profil użytkownika – Verni</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <!-- Karla font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600&display=swap" rel="stylesheet">
+
+
+  <!-- layout (sidebar + cards) -->
+  <link rel="stylesheet" href="../home/home.css">
+
+  <!-- profile styles -->
+  <link rel="stylesheet" href="../profil/profile.css">
+
+  <link rel="stylesheet" href="../public/public-profile.css">
+
+
+</head>
+
+<body>
+
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+  <div class="sidebar-inner">
+
+    <a href="../home/home.html" class="sidebar-logo">
+      <img src="../assets/verni-logo.png">
+    </a>
+
+    <nav class="sidebar-nav">
+
+      <a href="../whiteboard/whiteboard.html">
+        <img src="../assets/newproject-logo.png">
+      </a>
+
+      <a href="../saved/saved.html">
+        <img src="../assets/bookmarks-logo.png">
+      </a>
+
+      <a href="../profil/profile.html">
+        <img src="../assets/profile-logo.png">
+      </a>
+
+    </nav>
+
+  </div>
+
+</aside>
+
+
+
+<!-- CONTENT -->
+<div class="profile-wrapper">
+
+
+  <!-- PROFILE HEADER -->
+  <div class="profile-header">
+
+    <img id="avatar" class="profile-avatar">
+
+    <div class="profile-info">
+
+      <h1 id="username"></h1>
+
+      <div id="userHandle" class="profile-handle"></div>
+
+      <div id="bio" class="profile-bio"></div>
+      <button id="followBtn" class="follow-btn">
+  Obserwuj
+</button>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- PROJECTS -->
+  <div class="profile-projects">
+
+    <h2>Publiczne Verni</h2>
+
+    <ul id="projectsList" class="projects-grid"></ul>
+
+  </div>
+
+
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../shared/supabaseClient.js"></script>
+
+<script src="public-profile.js"></script>
+
+
+</body>
+</html>

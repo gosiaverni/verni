@@ -1,0 +1,180 @@
+/* =========================
+   FONT
+========================= */
+
+* {
+  font-family: "Karla", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+
+/* =========================
+   WRAPPER
+========================= */
+
+.saved-wrapper {
+
+  margin-left: 72px;
+
+  padding: 32px;
+
+  box-sizing: border-box;
+
+  width: 100%;
+
+  min-height: 100vh;
+
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.saved-header {
+
+  margin-bottom: 24px;
+
+}
+
+.saved-header h1 {
+
+  margin: 0;
+
+  font-size: 24px;
+
+  font-weight: 600;
+
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.saved-container {
+
+  width: 100%;
+
+}
+
+
+/* =========================
+   SAVED GRID
+========================= */
+
+.saved-grid {
+
+  list-style: none;
+
+  padding: 0;
+
+  margin: 0;
+
+  display: grid;
+
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+
+  gap: 24px;
+
+}
+
+
+/* =========================
+   CARD FIXES (reuse home.css)
+========================= */
+
+.saved-grid .project-card {
+
+  padding: 12px;
+
+}
+
+
+/* preview */
+
+.saved-grid .home-board-preview {
+
+  width: 100%;
+
+  aspect-ratio: 4 / 3;
+
+  object-fit: cover;
+
+  border-radius: 10px;
+
+  background: #f0f0f0;
+
+}
+
+
+/* title */
+
+.saved-grid .home-board-title {
+
+  font-size: 14px;
+
+}
+
+
+/* author */
+
+.saved-grid .home-board-author {
+
+  font-size: 12px;
+
+}
+
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.home-empty {
+
+  padding: 40px;
+
+  text-align: center;
+
+  color: #777;
+
+}
+
+
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1400px) {
+
+  .saved-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+}
+
+@media (max-width: 1100px) {
+
+  .saved-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+}
+
+@media (max-width: 800px) {
+
+  .saved-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+@media (max-width: 500px) {
+
+  .saved-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+

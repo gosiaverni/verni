@@ -1,0 +1,409 @@
+/* =========================
+   RESET
+========================= */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: #fcfdff;
+  color: #111111;
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+  width: 72px;
+  background: white;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  position: fixed;
+}
+
+/* Gradient border */
+.sidebar::after {
+
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  right: 0;
+
+  width: 2px;
+  height: 100%;
+
+  background: linear-gradient(
+    to bottom,
+    #FF422C,
+    #F28B18
+  );
+}
+
+.sidebar-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  gap: 40px;
+}
+
+.sidebar-logo {
+  font-weight: 700;
+  font-size: 22px;
+  text-decoration: none;
+  color: #ff6a00;
+}
+
+
+
+/* =========================
+   WRAPPER
+========================= */
+
+.home-wrapper {
+  margin-left: 72px;
+  width: calc(100vw - 72px);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.home-header {
+  padding: 32px;
+  padding-bottom: 12px;
+}
+
+.home-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.home-container {
+  padding: 32px;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* =========================
+   GRID FEED
+========================= */
+
+.home-feed {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+ display: grid;
+
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+
+  gap: 24px;
+
+  width: 100%;
+}
+
+
+/* =========================
+   PROJECT CARD
+========================= */
+
+.project-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+
+  border: 1px solid #eeeeee;
+
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease,
+              border-color 0.2s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+
+  border-color: #dddddd;
+}
+
+
+/* =========================
+   PREVIEW IMAGE
+========================= */
+
+.home-board-preview {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+
+  background: #f0f0f0;
+
+  display: block;
+}
+
+
+/* =========================
+   HEADER INSIDE CARD
+========================= */
+
+.home-board-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 12px 14px 6px 14px;
+}
+
+
+.home-board-title {
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #111;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+
+  max-width: 85%;
+}
+
+
+/* =========================
+   BOOKMARK BUTTON
+========================= */
+
+.bookmark-btn {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 28px;
+
+  height: 28px;
+
+  border-radius: 6px;
+
+  color: #3A2D97;
+
+  opacity: 0.6;
+
+  transition: background 0.15s ease,
+              opacity 0.15s ease;
+}
+
+.bookmark-btn:hover {
+
+  opacity: 1;
+
+  background: #f3f3f3;
+}
+
+
+/* =========================
+   AUTHOR
+========================= */
+
+.home-board-author {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 0 14px 14px 14px;
+
+  font-size: 13px;
+
+  color: #666;
+}
+
+
+.home-board-avatar {
+
+  width: 22px;
+
+  height: 22px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+}
+
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.home-empty {
+
+  padding: 40px;
+
+  text-align: center;
+
+  color: #777;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+  .home-feed {
+
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .sidebar {
+    width: 56px;
+  }
+
+  .home-wrapper {
+    margin-left: 56px;
+  }
+
+  .home-container {
+    padding: 20px;
+  }
+
+  .home-header {
+    padding: 20px;
+  }
+
+}
+
+
+@media (max-width: 420px) {
+
+  .home-feed {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+.sidebar-logo img {
+  width: 40px;
+  height: 40px;
+
+  object-fit: contain;
+
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* przycisk ikonki */
+.sidebar-nav a {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+
+  border-radius: 12px;
+
+  text-decoration: none;
+
+  transition: background 0.15s ease,
+              transform 0.15s ease;
+}
+
+/* hover */
+.sidebar-nav a:hover {
+
+  background: #f3f3f3;
+
+  transform: scale(1.08);
+}
+
+/* ikonka */
+.sidebar-nav img {
+
+  width: 60px;
+  height: 60px;
+
+  object-fit: contain;
+
+  display: block;
+}
+
+* {
+
+  font-family: "Karla", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+}
+
+.comment-btn {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 6px;
+
+  opacity: 0.6;
+
+  cursor: pointer;
+
+}
+
+.comment-btn:hover {
+
+  opacity: 1;
+
+  background: #f3f3f3;
+
+}

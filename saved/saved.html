@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+
+  <meta charset="UTF-8">
+  <title>Zapisane – Verni</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Karla font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../home/home.css">
+  <link rel="stylesheet" href="./saved.css">
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+  <div class="sidebar-inner">
+
+    <a href="../home/home.html" class="sidebar-logo">
+      <img src="../assets/verni-logo.png">
+    </a>
+
+    <nav class="sidebar-nav">
+
+      <a href="../whiteboard/whiteboard.html">
+        <img src="../assets/newproject-logo.png">
+      </a>
+
+      <a href="../saved/saved.html" class="active">
+        <img src="../assets/bookmarks-logo.png">
+      </a>
+
+      <a href="../profil/profile.html">
+        <img src="../assets/profile-logo.png">
+      </a>
+
+    </nav>
+
+  </div>
+
+</aside>
+
+
+<!-- CONTENT -->
+<div class="saved-wrapper">
+
+  <header class="saved-header">
+    <h1>Zapisane</h1>
+  </header>
+
+  <main class="saved-container">
+
+    <ul id="savedGrid" class="saved-grid"></ul>
+
+  </main>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./saved.js"></script>
+
+</body>
+</html>

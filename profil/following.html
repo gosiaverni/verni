@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Obserwowani – Verni</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- font -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap">
+
+  <!-- CSS -->
+    <link rel="stylesheet" href="../home/home.css">
+  <link rel="stylesheet" href="./profile.css">
+ 
+
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-inner">
+
+      <a href="../home/home.html" class="sidebar-logo">
+        <img src="../assets/verni-logo.png">
+      </a>
+
+      <nav class="sidebar-nav">
+
+        <a href="../whiteboard/index.html">
+          <img src="../assets/newproject-logo.png">
+        </a>
+
+        <a href="../saved/saved.html">
+          <img src="../assets/bookmarks-logo.png">
+        </a>
+
+        <a href="../profil/profile.html">
+          <img src="../assets/profile-logo.png">
+        </a>
+
+      </nav>
+
+    </div>
+
+  </aside>
+
+
+  <!-- CONTENT -->
+  <div class="profile-wrapper">
+
+    <h1>Obserwowani</h1>
+
+    <ul id="followingList" class="following-list"></ul>
+
+  </div>
+
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="../shared/supabaseClient.js"></script>
+
+  <script src="./following.js"></script>
+
+</body>
+
+</html>

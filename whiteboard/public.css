@@ -1,0 +1,299 @@
+/* =========================
+   FONT
+========================= */
+
+* {
+
+  font-family: "Karla", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+}
+
+body {
+
+  font-family: "Karla", sans-serif;
+
+  font-weight: 400;
+
+  margin: 0;
+
+}
+
+.public-layout {
+
+  display: flex;
+
+  height: 100vh;
+
+}
+
+#board {
+
+  flex: 1;
+
+}
+
+.comments-panel {
+
+  width: 320px;
+
+  border-left: 1px solid #eee;
+
+  padding: 16px;
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+#commentsList {
+
+  flex: 1;
+
+  overflow-y: auto;
+
+}
+
+.comment {
+
+  padding: 8px;
+
+  border-bottom: 1px solid #eee;
+
+}
+
+#commentForm {
+
+  display: flex;
+
+  gap: 8px;
+
+}
+
+#board {
+
+  position: relative;
+
+  flex: 1;
+
+  overflow: hidden;
+
+}
+
+
+#boardBackgroundLayer {
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 0;
+
+}
+
+
+#boardInner {
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 1;
+
+}
+
+/* =========================
+   COMMENTS
+========================= */
+
+.comments-panel h3 {
+
+  margin: 0 0 16px 0;
+
+  font-weight: 600;
+
+}
+
+
+.comment {
+
+  padding: 10px 0;
+
+  border-bottom: 1px solid #eee;
+
+  font-size: 14px;
+
+}
+
+
+.comment b {
+
+  font-weight: 600;
+
+}
+
+
+#commentInput {
+
+  font-family: "Karla", sans-serif;
+
+  padding: 10px;
+
+  border-radius: 8px;
+
+  border: 1px solid #ddd;
+
+  outline: none;
+
+}
+
+
+#commentInput:focus {
+
+  border-color: #F28B18;
+
+}
+
+
+#commentForm button {
+
+  font-family: "Karla", sans-serif;
+
+  font-weight: 500;
+
+  background: linear-gradient(90deg, #FF422C, #F28B18);
+
+  border: none;
+
+  color: white;
+
+  padding: 10px 14px;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+}
+
+/* =========================
+   COMMENT WITH AVATAR
+========================= */
+
+.comment {
+
+  padding: 10px 0;
+
+  border-bottom: 1px solid #eee;
+
+}
+
+
+.comment-row {
+
+  display: flex;
+
+  gap: 10px;
+
+  align-items: flex-start;
+
+}
+
+
+.comment-avatar {
+
+  width: 32px;
+
+  height: 32px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+
+  flex-shrink: 0;
+
+}
+
+
+.comment-body {
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+
+.comment-author {
+
+  font-weight: 600;
+
+  font-size: 14px;
+
+}
+
+
+.comment-text {
+
+  font-size: 14px;
+
+  color: #333;
+
+}
+
+.comment-avatar:hover {
+
+  transform: scale(1.1);
+
+  transition: 0.15s;
+
+}
+
+.comment-header {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+}
+
+
+.comment-delete {
+
+  cursor: pointer;
+
+  opacity: 0.5;
+
+  font-size: 14px;
+
+}
+
+.comment-delete:hover {
+
+  opacity: 1;
+
+}
+
+
+.public-wrapper {
+
+  margin-left: 72px;
+
+  height: 100vh;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+}
+
+.public-layout {
+
+  display: flex;
+
+  gap: 24px;
+
+  height: 100%;
+
+}
