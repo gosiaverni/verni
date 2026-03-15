@@ -175,7 +175,69 @@ async function removeBookmark(boardId) {
   if (error) console.error(error);
 }
 
+// =======================
+// FETCH OPPORTUNITIES
+// =======================
 
+async function getLatestOpportunities(){
+
+  const { data, error } = await supabaseClient
+  .from("jobs")
+  .select(`
+    id,
+    title,
+    profiles:user_id (
+      handle
+    )
+  `)
+  .order("created_at", { ascending:false })
+  .limit(10)
+
+  if(error){
+    console.error(error)
+    return []
+  }
+
+  return data
+}
+
+// =======================
+// RENDER OPPORTUNITIES ROW
+// =======================
+
+async function renderOpportunitiesRow(){
+
+  const container = document.getElementById("opportunitiesRow")
+
+  if(!container) return
+
+  const opportunities = await getLatestOpportunities()
+
+  opportunities.forEach(job => {
+
+    const pill = document.createElement("div")
+
+    pill.className = "opportunity-pill"
+
+    const handle = job.profiles?.handle
+
+    pill.textContent =
+      handle
+        ? `${job.title} · @${handle}`
+        : job.title
+
+    pill.onclick = () => {
+
+      window.location.href =
+        "../opportunities/opportunities.html"
+
+    }
+
+    container.appendChild(pill)
+
+  })
+
+}
 // =======================
 // RENDER HOME FEED
 // =======================
@@ -366,6 +428,8 @@ header.appendChild(actions);
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  renderHomeFeed();
+  renderOpportunitiesRow()
+
+  renderHomeFeed()
 
 });

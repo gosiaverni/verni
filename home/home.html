@@ -1,27 +1,31 @@
+```html
 <!DOCTYPE html>
 <html lang="pl">
 <head>
 
-  <meta charset="UTF-8" />
+<meta charset="UTF-8">
+<title>Verni – Strona główna</title>
 
-  <title>Verni – Strona główna</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="./home.css" />
+<!-- CSS -->
+<link rel="stylesheet" href="./home.css">
 
 </head>
 
 
 <body>
 
-<!-- SIDEBAR --> 
+
+<!-- =========================
+     SIDEBAR
+========================= -->
+
 <aside class="sidebar">
 
   <div class="sidebar-inner">
@@ -40,15 +44,12 @@
         <img src="../assets/bookmarks-logo.png" alt="Zapisane">
       </a>
 
-    
+      <a href="../opportunities/opportunities.html">
+        <img src="../assets/opportunities.png" alt="Opportunities">
+      </a>
 
-      
       <a href="../profil/profile.html">
         <img src="../assets/profile-logo.png" alt="Profil">
-      </a>
-        <!-- NOWA IKONA OPPORTUNITIES -->
-<a href="../opportunities/opportunities.html">
-        <img src="../assets/opportunities.png" alt="Opportunities">
       </a>
 
     </nav>
@@ -58,29 +59,62 @@
 </aside>
 
 
-  <!-- CONTENT -->
-  <div class="home-wrapper">
+<!-- =========================
+     CONTENT
+========================= -->
 
-    <header class="home-header">
-      <h1>Publiczne projekty</h1>
-    </header>
-
-
-    <main class="home-container">
-
-      <ul id="homeFeed" class="home-feed"></ul>
-
-    </main>
-
-  </div>
+<div class="home-wrapper">
 
 
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <!-- =========================
+       OPPORTUNITIES ROW
+  ========================= -->
 
-  <!-- Twój JS -->
-  <script src="./home.js"></script>
+  <section class="home-opportunities">
+
+    <div class="home-opportunities-title">
+     Najnowsze opportunities
+    </div>
+
+    <div id="opportunitiesRow" class="opportunities-row"></div>
+
+  </section>
+
+
+  <!-- =========================
+       HEADER
+  ========================= -->
+
+  <header class="home-header">
+    <h1>Publiczne projekty</h1>
+  </header>
+
+
+  <!-- =========================
+       FEED
+  ========================= -->
+
+  <main class="home-container">
+
+    <ul id="homeFeed" class="home-feed"></ul>
+
+  </main>
+
+
+</div>
+
+
+<!-- =========================
+     SCRIPTS
+========================= -->
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+<!-- Home logic -->
+<script src="./home.js"></script>
 
 
 </body>
 </html>
+```

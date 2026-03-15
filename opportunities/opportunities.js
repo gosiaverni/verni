@@ -1,3 +1,15 @@
+async function getCurrentUser() {
+
+  const { data, error } = await supabaseClient.auth.getSession()
+
+  if(error){
+    console.error(error)
+    return null
+  }
+
+  return data.session?.user || null
+}
+
 // konfiguracja Supabase
 
 const supabaseUrl = "https://jnqaorggoplsxsnzkunx.supabase.co"
@@ -33,7 +45,9 @@ form.addEventListener("submit", async (event) => {
 
   event.preventDefault()
 
-  if(!userId){
+  const user = await getCurrentUser()
+
+  if(!user){
     alert("Musisz być zalogowany aby dodać ogłoszenie")
     return
   }
@@ -48,7 +62,7 @@ form.addEventListener("submit", async (event) => {
     type: formData.get("type"),
     salary: formData.get("salary"),
     contact_email: formData.get("contact_email"),
-    user_id: userId
+    user_id: user.id
   }
 
   const { error } = await supabaseClient
@@ -66,6 +80,7 @@ form.addEventListener("submit", async (event) => {
   loadJobs()
 
 })
+
 
 
 
