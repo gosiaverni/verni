@@ -488,6 +488,32 @@ document
     "../profil/following.html";
 
 };
+
+const logoutBtn = document.getElementById("logoutBtn")
+
+if (logoutBtn) {
+
+  logoutBtn.addEventListener("click", async () => {
+
+    const confirmLogout = confirm("Czy na pewno chcesz się wylogować?")
+
+    if (!confirmLogout) {
+      return
+    }
+
+    const { error } = await supabaseClient.auth.signOut()
+
+    if (error) {
+      console.error(error)
+      alert("Błąd wylogowania")
+      return
+    }
+
+    window.location.href = "../login/index.html"
+
+  })
+
+}
 /* =======================
    START
 ======================= */
