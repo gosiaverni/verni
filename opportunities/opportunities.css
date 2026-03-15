@@ -1,0 +1,297 @@
+/* =========================
+   RESET
+========================= */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Karla", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: #fcfdff;
+  color: #111111;
+}
+
+
+
+/* =========================
+   WRAPPER
+========================= */
+
+.opportunities-wrapper {
+
+  margin-left: 72px;
+
+  width: calc(100vw - 72px);
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.opportunities-header {
+
+  padding: 32px;
+
+  padding-bottom: 12px;
+}
+
+.opportunities-header h1 {
+
+  margin: 0;
+
+  font-size: 24px;
+
+  font-weight: 600;
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.opportunities-container {
+
+  padding: 32px;
+
+  max-width: 1000px;
+}
+
+
+/* =========================
+   FORMULARZ
+========================= */
+
+.job-form {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+
+  margin-bottom: 40px;
+
+  max-width: 500px;
+}
+
+.job-form input,
+.job-form textarea,
+.job-form select {
+
+  padding: 10px 12px;
+
+  border-radius: 8px;
+
+  border: 1px solid #e5e5e5;
+
+  font-size: 14px;
+
+  font-family: inherit;
+}
+
+.job-form textarea {
+
+  min-height: 90px;
+
+  resize: vertical;
+}
+
+.job-form button {
+
+  background: #FF422C;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 8px;
+
+  padding: 10px 14px;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  transition: background 0.15s ease,
+              transform 0.15s ease;
+}
+
+.job-form button:hover {
+
+  background: #e83b26;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================
+   LISTA OGŁOSZEŃ
+========================= */
+
+.jobs-list {
+
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+
+  gap: 24px;
+}
+
+
+/* =========================
+   KARTA OGŁOSZENIA
+========================= */
+
+.job-card {
+
+  background: #ffffff;
+
+  border-radius: 16px;
+
+  padding: 18px;
+
+  border: 1px solid #eeeeee;
+
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease,
+              border-color 0.2s ease;
+}
+
+.job-card:hover {
+
+  transform: translateY(-4px);
+
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+
+  border-color: #dddddd;
+}
+
+.job-title {
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  margin-bottom: 6px;
+}
+
+.job-company {
+
+  font-size: 13px;
+
+  color: #666;
+
+  margin-bottom: 10px;
+}
+
+.job-description {
+
+  font-size: 14px;
+
+  color: #333;
+
+  margin-bottom: 12px;
+}
+
+.job-meta {
+
+  font-size: 13px;
+
+  color: #777;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+
+  .sidebar {
+    width: 56px;
+  }
+
+  .opportunities-wrapper {
+    margin-left: 56px;
+  }
+
+  .opportunities-container {
+    padding: 20px;
+  }
+
+  .opportunities-header {
+    padding: 20px;
+  }
+
+}
+
+.job-author{
+
+  color:#FF422C;
+
+  text-decoration:none;
+
+  font-weight:500;
+
+}
+
+.job-author:hover{
+
+  text-decoration:underline;
+
+}
+
+/* =========================
+   AUTHOR
+========================= */
+
+.job-author-row{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:8px;
+
+  margin-bottom:10px;
+
+}
+
+.job-author-avatar{
+
+  width:24px;
+
+  height:24px;
+
+  border-radius:50%;
+
+  object-fit:cover;
+
+}
+
+.job-author{
+
+  font-size:13px;
+
+  font-weight:500;
+
+  color:#FF422C;
+
+  text-decoration:none;
+
+}
+
+.job-author:hover{
+
+  text-decoration:underline;
+
+}

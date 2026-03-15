@@ -8,7 +8,7 @@
 
 body {
   margin: 0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  
   background: #fcfdff;
   color: #111111;
 }
@@ -26,7 +26,7 @@ body {
   left: 0;
   top: 0;
 
-  position: fixed;
+ 
 }
 
 /* Gradient border */
@@ -63,7 +63,6 @@ body {
   text-decoration: none;
   color: #ff6a00;
 }
-
 
 
 /* =========================
