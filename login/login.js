@@ -46,3 +46,26 @@ form.addEventListener("submit", async (e) => {
 
   window.location.href = "/home/home.html";
 });
+
+const signupBtn = document.getElementById("signupBtn");
+
+signupBtn.addEventListener("click", async () => {
+
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+
+  msg.textContent = "Tworzenie konta...";
+
+  const { error } = await supabaseClient.auth.signUp({
+    email,
+    password
+  });
+
+  if (error) {
+    msg.textContent = error.message;
+    return;
+  }
+
+  msg.textContent = "Konto utworzone! Sprawdź email.";
+
+});
