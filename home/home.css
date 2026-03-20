@@ -469,3 +469,26 @@ body {
   border-color:#ddd;
 
 }
+.home-search {
+  margin-top: 12px;
+
+  width: 100%;
+  max-width: 400px;
+
+  padding: 10px 14px;
+
+  border-radius: 12px;
+  border: 1px solid #eee;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition: border-color 0.15s ease,
+              box-shadow 0.15s ease;
+}
+
+.home-search:focus {
+  border-color: #ff6a00;
+  box-shadow: 0 0 0 2px rgba(255,106,0,0.15);
+}

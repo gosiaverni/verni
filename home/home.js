@@ -15,6 +15,7 @@ const params = new URLSearchParams(window.location.search);
 const filterTag = params.get("tag");
 const filterCategory = params.get("category");
 
+let searchQuery = "";
 // =======================
 // BOOKMARK ICON
 // =======================
@@ -321,7 +322,23 @@ if (feed.length === 0) {
   list.appendChild(empty);
   return;
 }
+// 🔍 SEARCH FILTER
+if (searchQuery) {
 
+  const words = searchQuery.split(" ").filter(Boolean);
+
+  feed = feed.filter(b => {
+
+    const description = b.meta?.description?.toLowerCase() || "";
+    const tags = (b.meta?.tags || []).join(" ").toLowerCase();
+    const categories = (b.meta?.categories || []).join(" ").toLowerCase();
+    const handle = (b.ownerHandle || "").toLowerCase();
+
+    const fullText = `${description} ${tags} ${categories} ${handle}`;
+
+    return words.every(word => fullText.includes(word));
+  });
+}
   feed.forEach(item => {
 
     const li = document.createElement("li");
@@ -478,14 +495,31 @@ header.appendChild(actions);
 }
 
 
+
 // =======================
 // START
 // =======================
 
+
+
 document.addEventListener("DOMContentLoaded", () => {
 
-  renderOpportunitiesRow()
+  renderOpportunitiesRow();
+  renderHomeFeed();
 
-  renderHomeFeed()
+  const input = document.getElementById("searchInput");
+
+  let searchTimeout;
+
+if (input) {
+  input.addEventListener("input", e => {
+    clearTimeout(searchTimeout);
+
+    searchTimeout = setTimeout(() => {
+      searchQuery = e.target.value.toLowerCase();
+      renderHomeFeed();
+    }, 200);
+  });
+}
 
 });
