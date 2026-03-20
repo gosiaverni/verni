@@ -1065,21 +1065,63 @@ btnExportBoard.onclick = () => {
 
 async function generateBoardPreview() {
 
-  // 🔥 zapamiętaj transform
   const prevTransform = boardInner.style.transform;
-
-  // 🔥 reset widoku (żeby złapać całą kartkę)
   boardInner.style.transform = "none";
 
   const canvas = await html2canvas(boardInner, {
     backgroundColor: null,
-    scale: 0.5
+    scale: 1
   });
 
-  // 🔥 przywróć transform
+  const ctx = canvas.getContext("2d");
+  const { width, height } = canvas;
+
+  const imageData = ctx.getImageData(0, 0, width, height).data;
+
+  let top = height, bottom = 0, left = width, right = 0;
+
+  // 🔍 znajdź obszar z contentem
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+
+      const i = (y * width + x) * 4;
+      const alpha = imageData[i + 3];
+
+      if (alpha > 10) { // coś istnieje
+        if (x < left) left = x;
+        if (x > right) right = x;
+        if (y < top) top = y;
+        if (y > bottom) bottom = y;
+      }
+    }
+  }
+
+  // 🧱 padding (żeby nie było na styk)
+  const padding = 40;
+
+  left = Math.max(0, left - padding);
+  top = Math.max(0, top - padding);
+  right = Math.min(width, right + padding);
+  bottom = Math.min(height, bottom + padding);
+
+  const croppedWidth = right - left;
+  const croppedHeight = bottom - top;
+
+  const croppedCanvas = document.createElement("canvas");
+  croppedCanvas.width = croppedWidth;
+  croppedCanvas.height = croppedHeight;
+
+  const croppedCtx = croppedCanvas.getContext("2d");
+
+  croppedCtx.drawImage(
+    canvas,
+    left, top, croppedWidth, croppedHeight,
+    0, 0, croppedWidth, croppedHeight
+  );
+
   boardInner.style.transform = prevTransform;
 
-  return canvas.toDataURL("image/jpeg", 0.7);
+  return croppedCanvas.toDataURL("image/jpeg", 0.7);
 }
 
 async function addImage(file) {
