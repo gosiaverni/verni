@@ -271,7 +271,13 @@ if (filterTag || filterCategory) {
     window.location.href = "../home/home.html";
   };
 
-  list.parentElement.prepend(clear);
+ // usuń poprzedni jeśli istnieje
+const old = document.getElementById("clearFilterBtn");
+if (old) old.remove();
+
+clear.id = "clearFilterBtn";
+
+list.parentElement.prepend(clear);
 }
 
   if (!list) return;
@@ -305,23 +311,6 @@ if (filterCategory) {
     b.meta?.categories?.includes(filterCategory)
   );
 }
-
-// 🔥 TERAZ sprawdzenie
-if (feed.length === 0) {
-  const empty = document.createElement("div");
-  empty.className = "home-empty";
-
-  if (filterTag) {
-    empty.textContent = `Brak projektów dla #${filterTag}`;
-  } else if (filterCategory) {
-    empty.textContent = `Brak projektów w kategorii "${filterCategory}"`;
-  } else {
-    empty.textContent = "Brak publicznych projektów.";
-  }
-
-  list.appendChild(empty);
-  return;
-}
 // 🔍 SEARCH FILTER
 if (searchQuery) {
 
@@ -339,6 +328,25 @@ if (searchQuery) {
     return words.every(word => fullText.includes(word));
   });
 }
+// 🔥 TERAZ sprawdzenie
+if (feed.length === 0) {
+  const empty = document.createElement("div");
+  empty.className = "home-empty";
+
+  if (filterTag) {
+    empty.textContent = `Brak projektów dla #${filterTag}`;
+  } else if (filterCategory) {
+    empty.textContent = `Brak projektów w kategorii "${filterCategory}"`;
+  } else {
+    empty.textContent = "Brak publicznych projektów.";
+  }
+
+  list.appendChild(empty);
+  return;
+}
+// 🔍 SEARCH FILTER
+
+
   feed.forEach(item => {
 
     const li = document.createElement("li");
@@ -521,5 +529,46 @@ if (input) {
     }, 200);
   });
 }
+const filterBtn = document.getElementById("filterBtn");
+const dropdown = document.getElementById("filterDropdown");
+
+// toggle dropdown
+if (filterBtn && dropdown) {
+  filterBtn.onclick = () => {
+    dropdown.classList.toggle("hidden");
+  };
+}
+
+// kliknięcie kategorii
+document.querySelectorAll(".filter-option").forEach(opt => {
+
+  opt.onclick = () => {
+
+    const category = opt.dataset.category;
+
+    window.location.href =
+      `../home/home.html?category=${encodeURIComponent(category)}`;
+  };
+const active = filterCategory;
+
+document.querySelectorAll(".filter-option").forEach(opt => {
+  if (opt.dataset.category === active) {
+    opt.style.background = "#f3f3f3";
+    opt.style.fontWeight = "600";
+  }
+});
+});
+});
+
+document.addEventListener("click", e => {
+
+  if (!dropdown || !filterBtn) return;
+
+  if (
+    !dropdown.contains(e.target) &&
+    !filterBtn.contains(e.target)
+  ) {
+    dropdown.classList.add("hidden");
+  }
 
 });

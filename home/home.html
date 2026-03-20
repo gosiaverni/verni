@@ -89,11 +89,28 @@
 
   <h1>Odkrywaj projekty</h1>
 
+ <div class="home-search-row">
+
   <input
     id="searchInput"
     class="home-search"
-    placeholder="Szukaj..."
+    placeholder="Szukaj projektów..."
   >
+
+  <div id="filterBtn" class="filter-btn">⚙️</div>
+
+</div>
+
+<!-- 🔥 DROPDOWN -->
+<div id="filterDropdown" class="filter-dropdown hidden">
+
+  <div class="filter-option" data-category="malarstwo">malarstwo</div>
+  <div class="filter-option" data-category="fotografia">fotografia</div>
+  <div class="filter-option" data-category="rzeźba">rzeźba</div>
+  <div class="filter-option" data-category="rzemiosło">rzemiosło</div>
+  <div class="filter-option" data-category="design">design</div>
+  <div class="filter-option" data-category="moda">moda</div>
+  <div class="filter-option" data-category="inne">inne</div>
 
 </div>
 
@@ -125,4 +142,4 @@
 
 </body>
 </html>
-```
+
