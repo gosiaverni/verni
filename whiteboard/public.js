@@ -50,10 +50,12 @@ async function init() {
 
   await loadPublicBoard();
 
+fitBoardToScreen(); // 🔥 DODAJ
+
   await loadComments();
 
 }
-
+window.addEventListener("resize", fitBoardToScreen);
 /* ====== load ====== */
 
 async function loadPublicBoard() {
@@ -397,4 +399,19 @@ function goToTag(tag) {
 
 function goToCategory(category) {
   window.location.href = `../home/home.html?category=${encodeURIComponent(category)}`;
+}
+function fitBoardToScreen() {
+
+  const rect = board.getBoundingClientRect();
+
+  const scaleX = rect.width / 1920;
+  const scaleY = rect.height / 1080;
+
+  const scale = Math.min(scaleX, scaleY);
+
+  const offsetX = (rect.width - 1920 * scale) / 2;
+  const offsetY = (rect.height - 1080 * scale) / 2;
+
+  boardInner.style.transform =
+    `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
 }

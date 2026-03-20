@@ -150,15 +150,15 @@ body {
 
 .home-board-preview {
   width: 100%;
-  height: 200px; /* albo 180px */
 
-  object-fit: cover;   /* 🔥 klucz */
+  aspect-ratio: 16 / 9; /* 🔥 KLUCZ */
+
+  object-fit: cover;
   object-position: center;
 
   border-radius: 12px;
   background: #f5f5f5;
 }
-
 
 /* =========================
    HEADER INSIDE CARD

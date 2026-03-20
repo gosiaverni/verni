@@ -1073,50 +1073,46 @@ async function generateBoardPreview() {
     scale: 1
   });
 
-  const ctx = canvas.getContext("2d");
-  const { width, height } = canvas;
+  // 🧠 znajdź bounds elementów (a nie pikseli!)
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = 0;
+  let maxY = 0;
 
-  const imageData = ctx.getImageData(0, 0, width, height).data;
+  boardItems.forEach(item => {
+    minX = Math.min(minX, item.x);
+    minY = Math.min(minY, item.y);
+    maxX = Math.max(maxX, item.x + item.width);
+    maxY = Math.max(maxY, item.y + item.height);
+  });
 
-  let top = height, bottom = 0, left = width, right = 0;
-
-  // 🔍 znajdź obszar z contentem
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-
-      const i = (y * width + x) * 4;
-      const alpha = imageData[i + 3];
-
-      if (alpha > 10) { // coś istnieje
-        if (x < left) left = x;
-        if (x > right) right = x;
-        if (y < top) top = y;
-        if (y > bottom) bottom = y;
-      }
-    }
+  // jeśli brak elementów → zwróć normalny preview
+  if (!boardItems.length) {
+    boardInner.style.transform = prevTransform;
+    return canvas.toDataURL("image/jpeg", 0.7);
   }
 
-  // 🧱 padding (żeby nie było na styk)
-  const padding = 40;
+  // padding (mały!)
+  const padding = 20;
 
-  left = Math.max(0, left - padding);
-  top = Math.max(0, top - padding);
-  right = Math.min(width, right + padding);
-  bottom = Math.min(height, bottom + padding);
+  minX = Math.max(0, minX - padding);
+  minY = Math.max(0, minY - padding);
+  maxX = Math.min(1920, maxX + padding);
+  maxY = Math.min(1080, maxY + padding);
 
-  const croppedWidth = right - left;
-  const croppedHeight = bottom - top;
+  const width = maxX - minX;
+  const height = maxY - minY;
 
   const croppedCanvas = document.createElement("canvas");
-  croppedCanvas.width = croppedWidth;
-  croppedCanvas.height = croppedHeight;
+  croppedCanvas.width = width;
+  croppedCanvas.height = height;
 
-  const croppedCtx = croppedCanvas.getContext("2d");
+  const ctx = croppedCanvas.getContext("2d");
 
-  croppedCtx.drawImage(
+  ctx.drawImage(
     canvas,
-    left, top, croppedWidth, croppedHeight,
-    0, 0, croppedWidth, croppedHeight
+    minX, minY, width, height,
+    0, 0, width, height
   );
 
   boardInner.style.transform = prevTransform;
