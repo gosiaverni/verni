@@ -82,12 +82,12 @@ async function getPublicBoardsFeed() {
 
   const { data, error } = await supabaseClient
     .from("boards")
-    .select(`
+   .select(`
   id,
   name,
   preview,
   updated_at,
-  meta, // 🔥 DODAJ
+  meta,
   profiles:owner_id (
     id,
     name,
