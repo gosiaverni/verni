@@ -367,9 +367,11 @@ let selectedItem = null;
 let draggingItem = null;
 let resizingItem = null;
 
-let boardScale = 0.85;
+const DEFAULT_SCALE = 0.7;
+let boardScale = DEFAULT_SCALE;
 const MIN_SCALE = 0.6;
 const MAX_SCALE = 3;
+
 
 let boardOffsetX = 0;
 let boardOffsetY = 0;
@@ -614,7 +616,7 @@ function applyZoom() {
   let offsetX = (rect.width - boardWidth) / 2;
   let offsetY = (rect.height - boardHeight) / 2;
 
-  offsetY -= rect.height * 0.05;
+ offsetY += 5;
 
   if (boardWidth > rect.width) {
     const minX = rect.width - boardWidth - padding; // 🔥 ZMIANA
@@ -693,7 +695,7 @@ function loadBoard(boardId) {
   const raw = localStorage.getItem("board:" + boardId);
 
   activeBoardId = boardId;
-  boardScale = 0.85;
+  boardScale = DEFAULT_SCALE;
 boardOffsetX = 0;
 boardOffsetY = 0;
   applyZoom();
@@ -779,7 +781,7 @@ async function applyBoardBackground() {
   }
 }
 function resetView() {
-  boardScale = 0.85;
+ boardScale = DEFAULT_SCALE;
 
   boardOffsetX = 0;
   boardOffsetY = 0;

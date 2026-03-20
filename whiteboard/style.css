@@ -1,6 +1,30 @@
 /* ======================
    RESET / BASE
 ====================== */
+html, body {
+  height: 100%;
+  overflow: hidden; /* 🔥 KLUCZ */
+}
+
+.top-bar {
+  height: 60px;
+}
+
+#controls {
+  height: 60px;
+}
+
+#board {
+  position: absolute;
+  top: 120px;   /* wysokość top-bar + controls */
+  left: 0;
+
+  width: 100vw;
+  height: calc(100vh - 120px);
+
+  overflow: hidden;
+}
+
 #boardInner {
   box-shadow: 0 0 0 1px #ddd;
   background: white;
@@ -18,12 +42,27 @@ body {
 }
 
 .top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px;
-    background: #ffffff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+  position: relative;   /* 🔥 DODAJ */
+  z-index: 20;          /* 🔥 DODAJ */
+}
+#boardInner {
+  pointer-events: auto;
+}
+
+#board {
+  pointer-events: auto;
+}
+
+#controls {
+  position: relative;
+  z-index: 20;
 }
 
 .user-info {
@@ -70,18 +109,6 @@ body {
    BOARD
 ====================== */
 
-#board {
-  position: relative;
-  width: 100vw;
-  height: calc(100vh - 52px);
-  overflow: hidden;
-  background: #f4f4f4;
-}
-
-#board {
-  position: relative;
-  overflow: hidden;
-}
 
 #boardInner {
   position: absolute;
