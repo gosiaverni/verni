@@ -367,7 +367,7 @@ let selectedItem = null;
 let draggingItem = null;
 let resizingItem = null;
 
-let boardScale = 1;
+let boardScale = 0.85;
 const MIN_SCALE = 0.6;
 const MAX_SCALE = 3;
 
@@ -609,14 +609,16 @@ function applyZoom() {
   const boardWidth = 1920 * boardScale;
   const boardHeight = 1080 * boardScale;
 
-  // 👉 centrowanie gdy board mniejszy niż ekran
+  const padding = Math.max(120, rect.width * 0.1);
+
   let offsetX = (rect.width - boardWidth) / 2;
   let offsetY = (rect.height - boardHeight) / 2;
 
-  // 👉 jeśli większy → ogranicz panowanie
+  offsetY -= rect.height * 0.05;
+
   if (boardWidth > rect.width) {
-    const minX = rect.width - boardWidth;
-    const maxX = 0;
+    const minX = rect.width - boardWidth - padding; // 🔥 ZMIANA
+    const maxX = padding;                           // 🔥 ZMIANA
     boardOffsetX = Math.max(minX, Math.min(maxX, boardOffsetX));
     offsetX = boardOffsetX;
   } else {
@@ -624,8 +626,8 @@ function applyZoom() {
   }
 
   if (boardHeight > rect.height) {
-    const minY = rect.height - boardHeight;
-    const maxY = 0;
+    const minY = rect.height - boardHeight - padding; // 🔥 ZMIANA
+    const maxY = padding;                             // 🔥 ZMIANA
     boardOffsetY = Math.max(minY, Math.min(maxY, boardOffsetY));
     offsetY = boardOffsetY;
   } else {
@@ -635,7 +637,6 @@ function applyZoom() {
   boardInner.style.transform =
     `translate(${offsetX}px, ${offsetY}px) scale(${boardScale})`;
 }
-
 const SHAPES = ["square", "round", "circle", "triangle", "star", "heart"];
 
 function nextShape(current) {
@@ -692,9 +693,9 @@ function loadBoard(boardId) {
   const raw = localStorage.getItem("board:" + boardId);
 
   activeBoardId = boardId;
-  boardOffsetX = 0;
-  boardOffsetY = 0;
-  boardScale = 1;
+  boardScale = 0.85;
+boardOffsetX = 0;
+boardOffsetY = 0;
   applyZoom();
 
   if (!raw) {
@@ -778,7 +779,7 @@ async function applyBoardBackground() {
   }
 }
 function resetView() {
-  boardScale = 1;
+  boardScale = 0.85;
 
   boardOffsetX = 0;
   boardOffsetY = 0;
