@@ -342,3 +342,14 @@ body {
   border-radius: 999px;
   padding: 4px 10px;
 }
+.tag-pill,
+.category-pill {
+  cursor: pointer;
+  transition: transform 0.1s ease,
+              background 0.15s ease;
+}
+
+.tag-pill:hover,
+.category-pill:hover {
+  transform: scale(1.05);
+}

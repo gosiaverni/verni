@@ -10,6 +10,10 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_ANON_KEY
 );
 
+const params = new URLSearchParams(window.location.search);
+
+const filterTag = params.get("tag");
+const filterCategory = params.get("category");
 
 // =======================
 // BOOKMARK ICON
@@ -79,17 +83,18 @@ async function getPublicBoardsFeed() {
   const { data, error } = await supabaseClient
     .from("boards")
     .select(`
-      id,
-      name,
-      preview,
-      updated_at,
-      profiles:owner_id (
-        id,
-        name,
-        handle,
-        avatar
-      )
-    `)
+  id,
+  name,
+  preview,
+  updated_at,
+  meta, // 🔥 DODAJ
+  profiles:owner_id (
+    id,
+    name,
+    handle,
+    avatar
+  )
+`)
     .eq("public", true)
     .order("updated_at", { ascending: false });
 
@@ -99,15 +104,18 @@ async function getPublicBoardsFeed() {
   }
 
   return data.map(b => ({
-    boardId: b.id,
-    boardName: b.name,
-    updated: b.updated_at,
-    preview: b.preview,
-    ownerId: b.profiles?.id,
-    ownerHandle: b.profiles?.handle || null,
-    ownerName: b.profiles?.name || "Unknown",
-    ownerAvatar: b.profiles?.avatar || null
-  }));
+  boardId: b.id,
+  boardName: b.name,
+  updated: b.updated_at,
+  preview: b.preview,
+  ownerId: b.profiles?.id,
+  ownerHandle: b.profiles?.handle || null,
+  ownerName: b.profiles?.name || "Unknown",
+  ownerAvatar: b.profiles?.avatar || null,
+
+  // 🔥 NOWE
+  meta: b.meta || {}
+}));
 }
 
 
@@ -242,29 +250,77 @@ async function renderOpportunitiesRow(){
 // RENDER HOME FEED
 // =======================
 
+
 async function renderHomeFeed() {
 
-  const list = document.getElementById("homeFeed");
+ const list = document.getElementById("homeFeed");
+if (!list) return;
+
+// 🔥 CLEAR FILTER BUTTON
+if (filterTag || filterCategory) {
+  const clear = document.createElement("div");
+
+  clear.textContent = "← Wróć do wszystkich projektów";
+  clear.style.cursor = "pointer";
+  clear.style.fontSize = "13px";
+  clear.style.color = "#666";
+  clear.style.marginBottom = "12px";
+
+  clear.onclick = () => {
+    window.location.href = "../home/home.html";
+  };
+
+  list.parentElement.prepend(clear);
+}
 
   if (!list) return;
 
   list.innerHTML = "";
+  const header = document.querySelector(".home-header h1");
 
-  const feed = await getPublicBoardsFeed();
-  const bookmarks = await getUserBookmarks();
+if (header) {
+  if (filterTag) {
+    header.textContent = `#${filterTag}`;
+  } else if (filterCategory) {
+    header.textContent = filterCategory;
+  } else {
+    header.textContent = "Odkrywaj projekty";
+  }
+}
 
+  let feed = await getPublicBoardsFeed();
+const bookmarks = await getUserBookmarks();
 
-  if (feed.length === 0) {
+// 🔥 filtr tag
+if (filterTag) {
+  feed = feed.filter(b =>
+    b.meta?.tags?.includes(filterTag)
+  );
+}
 
-    const empty = document.createElement("div");
-    empty.className = "home-empty";
+// 🔥 filtr kategoria
+if (filterCategory) {
+  feed = feed.filter(b =>
+    b.meta?.categories?.includes(filterCategory)
+  );
+}
+
+// 🔥 TERAZ sprawdzenie
+if (feed.length === 0) {
+  const empty = document.createElement("div");
+  empty.className = "home-empty";
+
+  if (filterTag) {
+    empty.textContent = `Brak projektów dla #${filterTag}`;
+  } else if (filterCategory) {
+    empty.textContent = `Brak projektów w kategorii "${filterCategory}"`;
+  } else {
     empty.textContent = "Brak publicznych projektów.";
-
-    list.appendChild(empty);
-
-    return;
   }
 
+  list.appendChild(empty);
+  return;
+}
 
   feed.forEach(item => {
 

@@ -117,13 +117,21 @@ function renderProjectMeta(data) {
 
     ${meta.categories?.length ? `
       <div class="project-categories">
-        ${meta.categories.map(c => `<span class="category-pill">${c}</span>`).join("")}
+        ${meta.categories.map(c => `
+  <span class="category-pill" onclick="goToCategory('${c}')">
+    ${c}
+  </span>
+`).join("")}
       </div>
     ` : ""}
 
     ${meta.tags?.length ? `
       <div class="project-tags">
-        ${meta.tags.map(t => `<span class="tag-pill">#${t}</span>`).join("")}
+        ${meta.tags.map(t => `
+  <span class="tag-pill" onclick="goToTag('${t}')">
+    #${t}
+  </span>
+`).join("")}
       </div>
     ` : ""}
 
@@ -381,4 +389,12 @@ avatar.onclick = () => {
 
   });
 
+}
+
+function goToTag(tag) {
+  window.location.href = `../home/home.html?tag=${encodeURIComponent(tag)}`;
+}
+
+function goToCategory(category) {
+  window.location.href = `../home/home.html?category=${encodeURIComponent(category)}`;
 }
