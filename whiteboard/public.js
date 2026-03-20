@@ -60,7 +60,17 @@ async function loadPublicBoard() {
 
   const { data, error } = await supabaseClient
     .from("boards")
-    .select("name, content, public")
+    .select(`
+  name,
+  content,
+  public,
+  meta,
+  owner_id,
+  profiles (
+    handle,
+    avatar
+  )
+`)
     .eq("id", boardId)
     .eq("public", true)
     .single();
@@ -71,7 +81,7 @@ async function loadPublicBoard() {
   }
 
   document.title = data.name;
-
+renderProjectMeta(data);
   boardItems = data.content.items || [];
   boardBackground = data.content.background || null;
 
@@ -79,6 +89,46 @@ async function loadPublicBoard() {
   renderBoard();
 }
 
+function renderProjectMeta(data) {
+
+  const container = document.getElementById("projectMeta");
+
+  const meta = data.meta || {};
+  const handle = data.profiles?.handle || "user";
+  const avatar = data.profiles?.avatar || "../assets/default-avatar.png";
+
+  container.innerHTML = `
+
+    <div class="project-header">
+
+      <img class="project-avatar" src="${avatar}">
+
+      <div class="project-author">
+        @${handle}
+      </div>
+
+    </div>
+
+    ${meta.description ? `
+      <div class="project-description">
+        ${meta.description}
+      </div>
+    ` : ""}
+
+    ${meta.categories?.length ? `
+      <div class="project-categories">
+        ${meta.categories.map(c => `<span class="category-pill">${c}</span>`).join("")}
+      </div>
+    ` : ""}
+
+    ${meta.tags?.length ? `
+      <div class="project-tags">
+        ${meta.tags.map(t => `<span class="tag-pill">#${t}</span>`).join("")}
+      </div>
+    ` : ""}
+
+  `;
+}
 /* ====== TŁO – prawie 1:1 z Twojego kodu ====== */
 
 async function applyBoardBackground() {
