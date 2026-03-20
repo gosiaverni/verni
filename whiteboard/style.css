@@ -329,3 +329,159 @@ body {
 .board-item {
   overflow: hidden;
 }
+
+/* =========================
+   MODAL – PUBLIC PROJECT
+========================= */
+
+.modal {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.25);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 999;
+  backdrop-filter: blur(4px);
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: white;
+
+  border-radius: 20px;
+  border: 1px solid #eeeeee;
+
+  width: 420px;
+  max-width: 90%;
+
+  padding: 24px;
+
+  box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* =========================
+   TITLE
+========================= */
+
+.modal-content h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* =========================
+   LABELS
+========================= */
+
+.modal-content label {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  width: 100%;
+
+  border: 1px solid #eeeeee;
+  border-radius: 10px;
+
+  padding: 10px 12px;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition: border-color 0.15s ease,
+              box-shadow 0.15s ease;
+}
+
+.modal-content textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* focus */
+.modal-content input:focus,
+.modal-content textarea:focus,
+.modal-content select:focus {
+  border-color: #ff6a00;
+
+  box-shadow: 0 0 0 2px rgba(255,106,0,0.15);
+}
+
+/* =========================
+   SELECT MULTI
+========================= */
+
+.modal-content select {
+  height: 100px;
+}
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* primary */
+#saveProjectMeta {
+  background: linear-gradient(135deg, #FF422C, #F28B18);
+  color: white;
+
+  border: none;
+  border-radius: 10px;
+
+  padding: 10px 16px;
+  font-size: 14px;
+
+  cursor: pointer;
+
+  transition: transform 0.15s ease,
+              box-shadow 0.15s ease;
+}
+
+#saveProjectMeta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(255, 106, 0, 0.25);
+}
+
+/* secondary */
+#cancelProjectMeta {
+  background: #f5f5f5;
+  color: #333;
+
+  border: none;
+  border-radius: 10px;
+
+  padding: 10px 16px;
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+#cancelProjectMeta:hover {
+  background: #eeeeee;
+}

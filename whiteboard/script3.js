@@ -1,9 +1,64 @@
 // ======================
 // ELEMENTY HTML
 // ======================
+const modal = document.getElementById("publicProjectModal");
+const projectNameInput = document.getElementById("projectNameInput");
+const projectCategory = document.getElementById("projectCategory");
+const projectTags = document.getElementById("projectTags");
+const projectDescription = document.getElementById("projectDescription");
 
+const saveProjectMetaBtn = document.getElementById("saveProjectMeta");
+const cancelProjectMetaBtn = document.getElementById("cancelProjectMeta");
 const addTextBtn = document.getElementById("addTextBtn");
+function openPublicModal(board) {
+  modal.classList.remove("hidden");
 
+  projectNameInput.value = board.name || "";
+  projectDescription.value = board.meta?.description || "";
+  projectTags.value = (board.meta?.tags || []).join(", ");
+
+  // 🔥 ustaw zaznaczone kategorie
+  const selected = board.meta?.categories || [];
+
+  Array.from(projectCategory.options).forEach(opt => {
+    opt.selected = selected.includes(opt.value);
+  });
+}
+
+saveProjectMetaBtn.onclick = async () => {
+  const index = loadBoardsIndex();
+  const b = index.boards.find(b => b.id === activeBoardId);
+  if (!b) return;
+
+  b.name = projectNameInput.value;
+
+b.meta = {
+  description: projectDescription.value,
+  tags: projectTags.value
+    .split(",")
+    .map(t => t.trim())
+    .filter(Boolean),
+
+  categories: Array.from(projectCategory.selectedOptions).map(o => o.value)
+};
+
+  b.public = true;
+  b.updated = Date.now();
+
+  modal.classList.add("hidden");
+
+  saveBoardsIndex(index);
+  renderBoardsList();
+
+  await ensureImagesUploadedForPublicBoard();
+  await syncBoardToSupabase(b);
+};
+cancelProjectMetaBtn.onclick = () => {
+  modal.classList.add("hidden");
+
+  // cofnięcie toggle
+  boardPublicToggle.checked = false;
+};
 function loadUserProfileHeader() {
   const profileRaw = localStorage.getItem("profile");
   if (!profileRaw) return;
@@ -34,19 +89,20 @@ async function syncBoardToSupabase(boardMeta) {
   const { error } = await window.supabaseClient
     .from("boards")
     .upsert({
-      id: boardMeta.id,
-      name: boardMeta.name,
-      preview: boardMeta.preview,
-      public: boardMeta.public,
-      owner_id: userId,
-      updated_at: new Date().toISOString(),
+  id: boardMeta.id,
+  name: boardMeta.name,
+  preview: boardMeta.preview,
+  public: boardMeta.public,
+  owner_id: userId,
+  updated_at: new Date().toISOString(),
 
-      // ⬇⬇⬇ NOWE
-      content: {
-        items: boardItems,
-        background: boardBackground
-      }
-    });
+  meta: boardMeta.meta, // ⬅⬅⬅ NOWE
+
+  content: {
+    items: boardItems,
+    background: boardBackground
+  }
+});
 
   if (error) {
     console.error(error);
@@ -394,12 +450,22 @@ function loadBoardsIndex() {
   const index = JSON.parse(raw);
 
   let changed = false;
-  index.boards.forEach(b => {
-    if (typeof b.public !== "boolean") {
-      b.public = false;
-      changed = true;
-    }
-  });
+ index.boards.forEach(b => {
+  if (typeof b.public !== "boolean") {
+    b.public = false;
+    changed = true;
+  }
+
+  // 🔥 NOWE
+  if (!b.meta) {
+    b.meta = {
+      description: "",
+      tags: [],
+      categories: []
+    };
+    changed = true;
+  }
+});
 
   if (changed) saveBoardsIndex(index);
 
@@ -473,45 +539,34 @@ function syncBoardPublicToggle() {
   boardPublicToggle.checked = !!b.public;
 }
 if (boardPublicToggle) {
-boardPublicToggle.onchange = async () => {
-  const index = loadBoardsIndex();
-  const b = index.boards.find(b => b.id === activeBoardId);
-  if (!b) return;
+  boardPublicToggle.onchange = async () => {
+    const index = loadBoardsIndex();
+    const b = index.boards.find(b => b.id === activeBoardId);
+    if (!b) return;
 
-  b.public = boardPublicToggle.checked;
-  if (b.public) {
-  await ensureImagesUploadedForPublicBoard();
+    // 🔥 WŁĄCZANIE PUBLIC → formularz
+   if (boardPublicToggle.checked) {
+  boardPublicToggle.checked = false; // 🔥 reset
+  openPublicModal(b);
+  return;
 }
 
-  b.updated = Date.now();
+    // 🔒 WYŁĄCZANIE PUBLIC
+b.public = false;
+b.updated = Date.now();
 
-if (b.public && !saveBoard._previewLock) {
-  saveBoard._previewLock = true;
+saveBoardsIndex(index);
+renderBoardsList();
 
-  setTimeout(async () => {
-    const index2 = loadBoardsIndex();
-    const bb = index2.boards.find(x => x.id === activeBoardId);
+await syncBoardToSupabase(b);
 
-    if (bb && bb.public) {
-      bb.preview = await generateBoardPreview();
-      saveBoardsIndex(index2);
-      
-    }
-
-    saveBoard._previewLock = false;
-  }, 600);
+    
+  };
 }
 
 
-  saveBoardsIndex(index);
-  renderBoardsList();
-
-  await syncBoardToSupabase(b);
-
-};
 
 
-}
 
 async function ensureImagesUploadedForPublicBoard() {
 
@@ -707,11 +762,19 @@ function createBoard(name = "Nowy board") {
   const id = "board_" + Date.now();
   const index = loadBoardsIndex();
 
-  index.boards.push({
+ // przy tworzeniu boarda
+index.boards.push({
   id,
   name,
   updated: Date.now(),
-  public: false
+  public: false,
+
+  // ⬇⬇⬇ NOWE
+  meta: {
+    description: "",
+    tags: [],
+    categories: []
+  }
 });
 
   index.activeBoardId = id;

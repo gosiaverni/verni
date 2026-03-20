@@ -162,7 +162,36 @@
   />
 
 </div>
+<div id="publicProjectModal" class="modal hidden">
+  <div class="modal-content">
+    <h2>Ustawienia projektu publicznego</h2>
 
+    <label>Nazwa projektu</label>
+    <input id="projectNameInput" type="text" />
+
+    <label>Kategorie</label>
+    <select id="projectCategory" multiple>
+      <<option value="malarstwo">Malarstwo</option>
+<option value="fotografia">Fotografia</option>
+<option value="rzezba">Rzeźba</option>
+<option value="rzemioslo">Rzemiosło</option>
+<option value="design">Design</option>
+<option value="moda">Moda</option>
+<option value="inne">Inne</option>
+    </select>
+
+    <label>Hasztagi</label>
+    <input id="projectTags" type="text" placeholder="#design, #moodboard" />
+
+    <label>Opis</label>
+    <textarea id="projectDescription"></textarea>
+
+    <div class="modal-actions">
+      <button id="saveProjectMeta">Zapisz</button>
+      <button id="cancelProjectMeta">Anuluj</button>
+    </div>
+  </div>
+</div>
 <!-- ======================
      SCRIPT
 ====================== -->
