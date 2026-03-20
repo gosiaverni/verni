@@ -1,7 +1,10 @@
 /* ======================
    RESET / BASE
 ====================== */
-
+#boardInner {
+  box-shadow: 0 0 0 1px #ddd;
+  background: white;
+}
 * {
   box-sizing: border-box;
 }
@@ -79,9 +82,18 @@ body {
 }
 
 #boardInner {
-  width: 5000px;
-  height: 5000px;
-  transform-origin: 0 0;
+  position: absolute;
+
+  width: 1920px;
+  height: 1080px;
+
+  left: 0;
+  top: 0;
+
+  transform-origin: top left;
+
+  background: white;
+  box-shadow: 0 0 0 1px #ddd;
 }
 #boardBackgroundLayer {
   position: absolute;

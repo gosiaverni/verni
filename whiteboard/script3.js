@@ -602,12 +602,39 @@ async function ensureImagesUploadedForPublicBoard() {
   }
 }
 
-
 function applyZoom() {
-  boardInner.style.transform =
-    `translate(${boardOffsetX}px, ${boardOffsetY}px) scale(${boardScale})`;
-}
 
+  const rect = board.getBoundingClientRect();
+
+  const boardWidth = 1920 * boardScale;
+  const boardHeight = 1080 * boardScale;
+
+  // 👉 centrowanie gdy board mniejszy niż ekran
+  let offsetX = (rect.width - boardWidth) / 2;
+  let offsetY = (rect.height - boardHeight) / 2;
+
+  // 👉 jeśli większy → ogranicz panowanie
+  if (boardWidth > rect.width) {
+    const minX = rect.width - boardWidth;
+    const maxX = 0;
+    boardOffsetX = Math.max(minX, Math.min(maxX, boardOffsetX));
+    offsetX = boardOffsetX;
+  } else {
+    boardOffsetX = offsetX;
+  }
+
+  if (boardHeight > rect.height) {
+    const minY = rect.height - boardHeight;
+    const maxY = 0;
+    boardOffsetY = Math.max(minY, Math.min(maxY, boardOffsetY));
+    offsetY = boardOffsetY;
+  } else {
+    boardOffsetY = offsetY;
+  }
+
+  boardInner.style.transform =
+    `translate(${offsetX}px, ${offsetY}px) scale(${boardScale})`;
+}
 
 const SHAPES = ["square", "round", "circle", "triangle", "star", "heart"];
 
@@ -715,6 +742,7 @@ async function applyBoardBackground() {
   // reset
   bgLayer.style.background = "none";
   bgLayer.style.backgroundImage = "none";
+  bgLayer.style.backgroundSize = "100% 100%";
 
   // 🧹 zwolnij poprzedni URL tła
   if (bgImageUrl) {
@@ -749,12 +777,12 @@ async function applyBoardBackground() {
     bgLayer.style.backgroundPosition = "center";
   }
 }
-
-
 function resetView() {
   boardScale = 1;
+
   boardOffsetX = 0;
   boardOffsetY = 0;
+
   applyZoom();
 }
 
@@ -1281,22 +1309,37 @@ document.addEventListener("mousemove", e => {
 }
 
 
-  if (resizingItem) {
-    resizingItem.width =
-      Math.max(40, startWidth + (e.clientX - startX) / boardScale);
+if (resizingItem) {
 
-    resizingItem.height =
-      Math.max(40, startHeight + (e.clientY - startY) / boardScale);
+  let newWidth =
+    Math.max(40, startWidth + (e.clientX - startX) / boardScale);
 
-    renderBoard();
-    return;
-  }
+  let newHeight =
+    Math.max(40, startHeight + (e.clientY - startY) / boardScale);
 
-  if (draggingItem) {
-    draggingItem.x = e.clientX / boardScale - offsetX;
-    draggingItem.y = e.clientY / boardScale - offsetY;
-    renderBoard();
-  }
+  // 🔒 ograniczenie do krawędzi
+  newWidth = Math.min(newWidth, 1920 - resizingItem.x);
+  newHeight = Math.min(newHeight, 1080 - resizingItem.y);
+
+  resizingItem.width = newWidth;
+  resizingItem.height = newHeight;
+
+  renderBoard();
+}
+if (draggingItem) {
+
+  let newX = e.clientX / boardScale - offsetX;
+  let newY = e.clientY / boardScale - offsetY;
+
+  // 🔒 ograniczenia do boarda
+  newX = Math.max(0, Math.min(1920 - draggingItem.width, newX));
+  newY = Math.max(0, Math.min(1080 - draggingItem.height, newY));
+
+  draggingItem.x = newX;
+  draggingItem.y = newY;
+
+  renderBoard();
+}
 });
 
 
@@ -1322,11 +1365,14 @@ board.addEventListener("mousedown", e => {
 
   const rect = board.getBoundingClientRect();
 
-  const x =
-    (e.clientX - rect.left - boardOffsetX) / boardScale;
+  let x =
+  (e.clientX - rect.left - boardOffsetX) / boardScale;
 
-  const y =
-    (e.clientY - rect.top - boardOffsetY) / boardScale;
+let y =
+  (e.clientY - rect.top - boardOffsetY) / boardScale;
+
+x = Math.max(0, Math.min(1920 - 200, x));
+y = Math.max(0, Math.min(1080 - 50, y));
 
   const maxZ = Math.max(0, ...boardItems.map(i => i.z || 0));
 
