@@ -1064,12 +1064,22 @@ btnExportBoard.onclick = () => {
 };
 
 async function generateBoardPreview() {
-  const canvas = await html2canvas(board, {
+
+  // 🔥 zapamiętaj transform
+  const prevTransform = boardInner.style.transform;
+
+  // 🔥 reset widoku (żeby złapać całą kartkę)
+  boardInner.style.transform = "none";
+
+  const canvas = await html2canvas(boardInner, {
     backgroundColor: null,
-    scale: 0.25
+    scale: 0.5
   });
 
-  return canvas.toDataURL("image/jpeg", 0.6);
+  // 🔥 przywróć transform
+  boardInner.style.transform = prevTransform;
+
+  return canvas.toDataURL("image/jpeg", 0.7);
 }
 
 async function addImage(file) {
