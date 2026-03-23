@@ -616,3 +616,52 @@ body {
 .bg-panel button {
   width: 100%;
 }
+
+.project-dropdown {
+  position: relative;
+}
+
+#btnProjectToggle {
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.project-panel {
+  position: absolute;
+  top: 40px;
+  left: 0;
+
+  width: 220px;
+
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  z-index: 999;
+}
+
+.project-panel.hidden {
+  display: none;
+}
+
+.project-panel button,
+.project-panel select {
+  width: 100%;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.project-panel .danger {
+  color: #d11;
+}

@@ -33,20 +33,32 @@
 
 
 <div id="controls">
+<div class="project-dropdown">
+  <button id="btnProjectToggle">📁 Projekt</button>
 
+  <div id="projectPanel" class="project-panel hidden">
+
+    <!-- wybór boarda -->
+    
+    <select id="boardSelect"></select>
+
+    <!-- akcje -->
+    <button id="btnNewBoard">➕ Nowy board</button>
+    <button id="btnRenameBoard">✏️ Zmień nazwę</button>
+
+    <!-- public toggle -->
+    <label class="toggle-row">
+      <input type="checkbox" id="boardPublicToggle">
+      Publiczny projekt
+    </label>
+
+    <button id="btnExportBoard">📤 Eksport PNG</button>
+    <button id="btnDeleteBoard" class="danger">🗑 Usuń</button>
+
+  </div>
+</div>
  
-  <select id="boardSelect"></select>
-
-  <button id="btnNewBoard">➕ Nowy board</button>
-  <button id="btnRenameBoard">✏️ Zmień nazwę</button>
-   <label>
-  <input type="checkbox" id="boardPublicToggle">
-  Projekt publiczny
-</label>
-
-<button id="btnDeleteBoard">🗑️ Usuń board</button>
-
-  <button id="btnExportBoard">⬇️ Eksport PNG</button>
+  
   <input type="file" id="boardImageInput" accept="image/*" />
 
 <button id="addTextBtn">🅰 Tekst</button>

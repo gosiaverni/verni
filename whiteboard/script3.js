@@ -15,6 +15,13 @@ const projectTags = document.getElementById("projectTags");
 const projectDescription = document.getElementById("projectDescription");
 const bgEffectBar = document.getElementById("bgEffectBar");
 const btnResetBg = document.getElementById("btnResetBg");
+const btnProjectToggle = document.getElementById("btnProjectToggle");
+const projectPanel = document.getElementById("projectPanel");
+
+btnProjectToggle.onclick = e => {
+  e.stopPropagation();
+  projectPanel.classList.toggle("hidden");
+};
 
 btnResetBg.onclick = async () => {
   pushHistory();
@@ -1344,6 +1351,9 @@ document.addEventListener("mousedown", e => {
   if (!e.target.closest(".bg-dropdown")) {
     bgPanel.classList.add("hidden");
   }
+  if (!e.target.closest(".project-dropdown")) {
+  projectPanel.classList.add("hidden");
+}
 });
 const bgColorInput = document.getElementById("bgColorInput");
 
