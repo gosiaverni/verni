@@ -202,9 +202,7 @@ loadUserProfileHeader();
 const userInfo = document.querySelector(".user-info");
 if (userInfo) {
   userInfo.style.cursor = "pointer";
-  userInfo.onclick = () => {
-    window.location.href = "../profil/profile.html";
-  };
+ 
 }
 
 const userId = localStorage.getItem("userId");

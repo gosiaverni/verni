@@ -12,14 +12,29 @@ html, body {
 
 #controls {
   height: 60px;
-}
 
+  margin-left: 72px;
+  width: calc(100% - 72px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 12px;
+  padding: 12px;
+
+  border-bottom: 1px solid #eee;
+  background: #ffffff;
+
+  position: relative;
+  z-index: 10;
+}
 #board {
   position: absolute;
-  top: 120px;   /* wysokość top-bar + controls */
-  left: 0;
+  top: 120px;
 
-  width: 100vw;
+  left: 72px;
+  width: calc(100vw - 72px);
   height: calc(100vh - 120px);
 
   overflow: hidden;
@@ -47,18 +62,10 @@ body {
   position: relative;   /* 🔥 DODAJ */
   z-index: 20;          /* 🔥 DODAJ */
 }
-#boardInner {
-  pointer-events: auto;
-}
 
-#board {
-  pointer-events: auto;
-}
 
-#controls {
-  position: relative;
-  z-index: 20;
-}
+
+
 
 .user-info {
     display: flex;
@@ -78,21 +85,7 @@ body {
    CONTROLS (TOP BAR)
 ====================== */
 
-#controls {
-  display: flex;
-  justify-content: center; /* 🔥 CENTROWANIE */
-  align-items: center;
 
-  gap: 12px;
-
-  padding: 12px;
-
-  border-bottom: 1px solid #eee;
-  background: #ffffff;
-
-  position: relative;
-  z-index: 10;
-}
 
 .file-btn {
   font-size: 14px;
@@ -116,6 +109,8 @@ body {
 
   background: white;
   box-shadow: 0 0 0 1px #ddd;
+
+  pointer-events: auto;
 }
 #boardBackgroundLayer {
   position: absolute;
@@ -676,7 +671,7 @@ body {
 
   background: transparent;
 
-  font-size: 13px;
+  
   cursor: pointer;
 
   transition: background 0.15s ease;
@@ -754,5 +749,5 @@ body {
   background: #f6f6f6;
 }
 .toolbar-btn {
-  font-weight: 500;
+  font-weight: 400;
 }
