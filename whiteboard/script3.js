@@ -17,6 +17,13 @@ const bgEffectBar = document.getElementById("bgEffectBar");
 const btnResetBg = document.getElementById("btnResetBg");
 const btnProjectToggle = document.getElementById("btnProjectToggle");
 const projectPanel = document.getElementById("projectPanel");
+const btnInsertToggle = document.getElementById("btnInsertToggle");
+const insertPanel = document.getElementById("insertPanel");
+
+btnInsertToggle.onclick = e => {
+  e.stopPropagation();
+  insertPanel.classList.toggle("hidden");
+};
 
 btnProjectToggle.onclick = e => {
   e.stopPropagation();
@@ -483,6 +490,7 @@ document.addEventListener("keydown", e => {
     e.preventDefault();
     redo();
   }
+  
 });
 
 
@@ -1334,18 +1342,26 @@ pushHistory(); // 🔥
 
 
 
+
+
 boardImageInput.addEventListener("change", e => {
   const file = e.target.files[0];
   if (!file) return;
+
   addImage(file);
+
+  insertPanel.classList.add("hidden"); // 🔥
   boardImageInput.value = "";
 });
 
+const btnInsertText = document.getElementById("btnInsertText");
 
-addTextBtn.addEventListener("click", () => {
+btnInsertText.onclick = () => {
   textInsertMode = true;
   board.style.cursor = "text";
-});
+
+  insertPanel.classList.add("hidden"); // 🔥 zamknij menu
+};
 
 document.addEventListener("mousedown", e => {
   if (!e.target.closest(".bg-dropdown")) {
@@ -1353,6 +1369,9 @@ document.addEventListener("mousedown", e => {
   }
   if (!e.target.closest(".project-dropdown")) {
   projectPanel.classList.add("hidden");
+}
+if (!e.target.closest(".insert-dropdown")) {
+  insertPanel.classList.add("hidden");
 }
 });
 const bgColorInput = document.getElementById("bgColorInput");
@@ -1544,10 +1563,7 @@ btnApplyGradient.onclick = () => {
 // MYSZ
 // ======================
 
-document.getElementById("goToProfile").onclick = () => {
-  saveBoard(); // bezpieczeństwo
-  window.location.href = "../profil/profile.html";
-};
+
 
 
 document.addEventListener("mousemove", e => {

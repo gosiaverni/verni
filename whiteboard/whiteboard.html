@@ -22,8 +22,6 @@
         <span id="userName"></span>
     </div>
 
-  
-	<button id="goToProfile">Profil / Projekty</button>
   <a href="../home/home.html" class="btn-home">
   Strona główna
 </a>
@@ -57,11 +55,21 @@
 
   </div>
 </div>
- 
-  
-  <input type="file" id="boardImageInput" accept="image/*" />
+ <div class="insert-dropdown">
+  <button id="btnInsertToggle">➕ Wstaw</button>
 
-<button id="addTextBtn">🅰 Tekst</button>
+  <div id="insertPanel" class="insert-panel hidden">
+
+    <button id="btnInsertText">📝 Tekst</button>
+
+    <label class="file-btn">
+      🖼 Obraz
+      <input type="file" id="boardImageInput">
+    </label>
+
+  </div>
+</div>
+  
 <div class="bg-dropdown">
   <button id="btnBgToggle">🎨 Tło</button>
 
