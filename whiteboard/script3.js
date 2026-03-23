@@ -1,12 +1,53 @@
 // ======================
 // ELEMENTY HTML
 // ======================
+const btnBgToggle = document.getElementById("btnBgToggle");
+const bgPanel = document.getElementById("bgPanel");
+
+btnBgToggle.onclick = e => {
+  e.stopPropagation();
+  bgPanel.classList.toggle("hidden");
+};
 const modal = document.getElementById("publicProjectModal");
 const projectNameInput = document.getElementById("projectNameInput");
 const projectCategory = document.getElementById("projectCategory");
 const projectTags = document.getElementById("projectTags");
 const projectDescription = document.getElementById("projectDescription");
+const bgEffectBar = document.getElementById("bgEffectBar");
+const btnResetBg = document.getElementById("btnResetBg");
 
+btnResetBg.onclick = async () => {
+  pushHistory();
+
+  if (boardBackground.type === "image" && boardBackground.imageId) {
+    await deleteImage(boardBackground.imageId);
+  }
+
+  boardBackground = {
+    type: "solid",
+    color: "#f4f4f4",
+    effect: "none"
+  };
+
+  saveBoard();
+  applyBoardBackground();
+};
+
+bgEffectBar.addEventListener("click", e => {
+  const btn = e.target.closest("button");
+  if (!btn) return;
+
+  const effect = btn.dataset.effect;
+
+  pushHistory(); // 🔥 undo support
+
+  boardBackground.effect = effect;
+
+  saveBoard();
+  applyBoardBackground();
+
+  updateEffectButtons();
+});
 const saveProjectMetaBtn = document.getElementById("saveProjectMeta");
 const cancelProjectMetaBtn = document.getElementById("cancelProjectMeta");
 const addTextBtn = document.getElementById("addTextBtn");
@@ -24,7 +65,16 @@ function openPublicModal(board) {
     opt.selected = selected.includes(opt.value);
   });
 }
+function updateEffectButtons() {
+  const buttons = bgEffectBar.querySelectorAll("button");
 
+  buttons.forEach(btn => {
+    btn.classList.toggle(
+      "active",
+      btn.dataset.effect === boardBackground.effect
+    );
+  });
+}
 saveProjectMetaBtn.onclick = async () => {
   const index = loadBoardsIndex();
   const b = index.boards.find(b => b.id === activeBoardId);
@@ -237,7 +287,20 @@ btnDeleteBoard.onclick = () => {
   loadBoard(activeBoardId);
   renderBoardsList();
 };
+btnBgToggle.onclick = e => {
+  e.stopPropagation();
 
+  bgPanel.classList.toggle("hidden");
+
+  // sync UI
+  bgColorInput.value = boardBackground.color || "#ffffff";
+
+  if (boardBackground.gradient) {
+    gradientFrom.value = boardBackground.gradient.from;
+    gradientTo.value = boardBackground.gradient.to;
+    gradientDirection.value = boardBackground.gradient.direction;
+  }
+};
 // ======================
 // INDEXEDDB – MINIMAL WRAPPER
 // ======================
@@ -325,6 +388,8 @@ bgImageInput.addEventListener("change", async e => {
 
   saveBoard();
   applyBoardBackground();
+  bgEffectBar.classList.remove("hidden");
+updateEffectButtons();
 
   bgImageInput.value = "";
   let storagePath = null;
@@ -421,8 +486,11 @@ document.addEventListener("keydown", e => {
 let textInsertMode = false;
 
 let boardBackground = {
-  type: "solid", // "solid" | "gradient" | "image"
+  type: "solid",
   color: "#f4f4f4",
+
+  effect: "none", // 🔥 NOWE
+
   gradient: {
     from: "#ffffff",
     to: "#dcdcdc",
@@ -788,7 +856,9 @@ boardOffsetY = 0;
   const parsed = JSON.parse(raw);
   boardItems = parsed.items || [];
   boardBackground = parsed.background || boardBackground;
-
+if (!boardBackground.effect) {
+  boardBackground.effect = "none";
+}
   applyBoardBackground();
   renderBoard();
   syncBoardPublicToggle();
@@ -818,6 +888,16 @@ redoStack = [];
 
 
 async function applyBoardBackground() {
+  // 🔥 reset klas efektów
+bgLayer.classList.remove(
+  "effect-none",
+  "effect-light",
+  "effect-dark",
+  "effect-blur"
+);
+
+// 🔥 dodaj aktualny efekt
+bgLayer.classList.add("effect-" + (boardBackground.effect || "none"));
   // reset
   bgLayer.style.background = "none";
   bgLayer.style.backgroundImage = "none";
@@ -1260,7 +1340,22 @@ addTextBtn.addEventListener("click", () => {
   board.style.cursor = "text";
 });
 
+document.addEventListener("mousedown", e => {
+  if (!e.target.closest(".bg-dropdown")) {
+    bgPanel.classList.add("hidden");
+  }
+});
+const bgColorInput = document.getElementById("bgColorInput");
 
+bgColorInput.oninput = () => {
+  pushHistory();
+
+  boardBackground.type = "solid";
+  boardBackground.color = bgColorInput.value;
+
+  saveBoard();
+  applyBoardBackground();
+};
  
 
 // ======================
@@ -1419,25 +1514,21 @@ bgOpacityInput.oninput = () => {
   renderBoard();
 };
 
-btnGradient.onclick = () => {
+btnApplyGradient.onclick = () => {
   pushHistory();
+
   boardBackground.type = "gradient";
   boardBackground.gradient = {
     from: gradientFrom.value,
     to: gradientTo.value,
     direction: gradientDirection.value
   };
+
   saveBoard();
   applyBoardBackground();
 };
 
-btnSolid.onclick = () => {
-  pushHistory();
-  boardBackground.type = "solid";
-  boardBackground.color = gradientFrom.value;
-  saveBoard();
-  applyBoardBackground();
-};
+
 
 // ======================
 // MYSZ
@@ -1658,17 +1749,7 @@ board.addEventListener("mousedown", e => {
 
 
 
-btnRemoveBgImage.onclick = async () => {
-  if (boardBackground.type === "image" && boardBackground.imageId) {
-    await deleteImage(boardBackground.imageId);
-  }
 
-  boardBackground.type = "solid";
-  boardBackground.imageId = null;
-
-  saveBoard();
-  applyBoardBackground();
-};
 
 
 // ======================

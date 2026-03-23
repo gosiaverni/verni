@@ -140,11 +140,6 @@ body {
   position: absolute;
   z-index: 1;
 }
-#boardBackgroundLayer {
-  filter: blur(4px);
-  opacity: 0.6;
-}
-
 
 /* ======================
    BOARD ITEM (COMMON)
@@ -525,4 +520,99 @@ body {
 
 #cancelProjectMeta:hover {
   background: #eeeeee;
+}
+
+/* ======================
+   BACKGROUND EFFECTS
+====================== */
+
+#boardBackgroundLayer.effect-none {
+  filter: none;
+  opacity: 1;
+}
+
+#boardBackgroundLayer.effect-light {
+  opacity: 0.6;
+  filter: brightness(1.2);
+}
+
+#boardBackgroundLayer.effect-dark {
+  opacity: 0.8;
+  filter: brightness(0.6);
+}
+
+#boardBackgroundLayer.effect-blur {
+  filter: blur(6px);
+  opacity: 0.7;
+}
+.bg-effect-bar {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  gap: 8px;
+
+  background: white;
+  padding: 8px 10px;
+  border-radius: 12px;
+
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  z-index: 9999;
+}
+
+.bg-effect-bar.hidden {
+  display: none;
+}
+
+.bg-effect-bar button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.bg-effect-bar button.active {
+  background: #6b4eff;
+  color: white;
+}
+
+.bg-dropdown {
+  position: relative;
+}
+
+#btnBgToggle {
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.bg-panel {
+  position: absolute;
+  top: 40px;
+  left: 0;
+
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  width: 200px;
+
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  z-index: 999;
+}
+
+.bg-panel.hidden {
+  display: none;
+}
+
+.bg-panel input,
+.bg-panel select,
+.bg-panel button {
+  width: 100%;
 }

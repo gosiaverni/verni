@@ -50,25 +50,41 @@
   <input type="file" id="boardImageInput" accept="image/*" />
 
 <button id="addTextBtn">🅰 Tekst</button>
+<div class="bg-dropdown">
+  <button id="btnBgToggle">🎨 Tło</button>
 
-<button id="undoBtn">↩️</button>
-<button id="redoBtn">↪️</button>
+ <div id="bgPanel" class="bg-panel hidden">
 
-  <!-- TŁO WHITEBOARDU -->
-  <input type="color" id="gradientFrom" title="Kolor / początek gradientu" />
-  <input type="color" id="gradientTo" title="Koniec gradientu" />
+  <label>Obraz</label>
+  <input type="file" id="bgImageInput">
 
-  <select id="gradientDirection" title="Kierunek gradientu">
+  <label>Kolor</label>
+  <input type="color" id="bgColorInput">
+
+  <label>Gradient</label>
+  <input type="color" id="gradientFrom">
+  <input type="color" id="gradientTo">
+
+  <select id="gradientDirection">
     <option value="to bottom">↓</option>
     <option value="to right">→</option>
     <option value="to bottom right">↘</option>
     <option value="to top">↑</option>
   </select>
 
-  <button id="btnGradient">Gradient</button>
-  <button id="btnSolid">Kolor</button>
-  <input type="file" id="bgImageInput" accept="image/*">
-<button id="btnRemoveBgImage">Usuń tło</button>
+  <button id="btnApplyGradient">Ustaw gradient</button>
+
+  <button id="btnResetBg">Reset</button>
+
+</div>
+</div>
+
+<button id="undoBtn">↩️</button>
+<button id="redoBtn">↪️</button>
+
+  <!-- TŁO WHITEBOARDU -->
+
+
 
   <button id="btnZoomOut">−</button>
 <button id="btnZoomIn">+</button>
@@ -95,7 +111,12 @@
 <!-- ======================
      TOOLBAR (DOŁ)
 ====================== -->
-
+<div id="bgEffectBar" class="bg-effect-bar hidden">
+  <button data-effect="none">Brak</button>
+  <button data-effect="light">Jasne</button>
+  <button data-effect="dark">Ciemne</button>
+  <button data-effect="blur">Blur</button>
+</div>
 <div id="boardToolbar" class="board-toolbar hidden">
 
   <button id="btnDelete" title="Usuń">🗑</button>
