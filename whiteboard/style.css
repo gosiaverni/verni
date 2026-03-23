@@ -749,5 +749,5 @@ body {
   background: #f6f6f6;
 }
 .toolbar-btn {
-  font-weight: 400;
+  font-family: "Karla", system-ui, sans-serif;
 }
