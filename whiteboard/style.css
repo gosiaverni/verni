@@ -25,12 +25,7 @@ html, body {
   overflow: hidden;
 }
 
-#boardInner {
-  box-shadow: 0 0 0 1px #ddd;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-}
+
 * {
   box-sizing: border-box;
 }
@@ -85,18 +80,21 @@ body {
 
 #controls {
   display: flex;
-  gap: 8px;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  background: #fff;
+  justify-content: center; /* 🔥 CENTROWANIE */
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 12px;
+
+  border-bottom: 1px solid #eee;
+  background: #ffffff;
+
   position: relative;
   z-index: 10;
 }
 
-#controls input,
-#controls select,
-#controls button {
-  padding: 4px 6px;
+.file-btn {
   font-size: 14px;
 }
 
@@ -131,10 +129,7 @@ body {
   pointer-events: none;
 }
 
-.board-item {
-  position: absolute;
-  z-index: 1;
-}
+
 
 /* ======================
    BOARD ITEM (COMMON)
@@ -582,25 +577,7 @@ body {
   cursor: pointer;
 }
 
-.bg-panel {
-  position: absolute;
-  top: 40px;
-  left: 0;
 
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  width: 200px;
-
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  z-index: 999;
-}
 
 .bg-panel.hidden {
   display: none;
@@ -621,23 +598,28 @@ body {
   cursor: pointer;
 }
 
-.project-panel {
+.project-panel,
+.bg-panel,
+.insert-panel {
   position: absolute;
-  top: 40px;
-  left: 0;
+  top: 48px;
+  left: 50%;
+  transform: translateX(-50%);
 
   width: 220px;
 
   background: white;
-  border: 1px solid #ddd;
-  border-radius: 12px;
+  border: 1px solid #eeeeee;
+  border-radius: 16px;
 
   padding: 10px;
+
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+
   z-index: 999;
 }
 
@@ -669,25 +651,7 @@ body {
   cursor: pointer;
 }
 
-.insert-panel {
-  position: absolute;
-  top: 40px;
-  left: 0;
 
-  width: 160px;
-
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  z-index: 999;
-}
 
 .insert-panel.hidden {
   display: none;
@@ -699,12 +663,27 @@ body {
 }
 
 .file-btn {
-  display: block;
-  padding: 6px;
-  border-radius: 8px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  padding: 0 10px;
+
+  border-radius: 10px;
+  border: 1px solid transparent;
+
+  background: transparent;
+
+  font-size: 13px;
   cursor: pointer;
-  text-align: center;
-  background: #f5f5f5;
+
+  transition: background 0.15s ease;
+}
+
+.file-btn:hover {
+  background: #f6f6f6;
 }
 
 .file-btn input {
@@ -713,4 +692,67 @@ body {
 .insert-panel button:hover,
 .file-btn:hover {
   background: #eee;
+}
+.toolbar-btn {
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 14px;
+
+  border-radius: 12px;
+  border: 1px solid #eeeeee;
+
+  background: white;
+
+  font-size: 14px;
+  cursor: pointer;
+
+  transition: background 0.15s ease,
+              border-color 0.15s ease,
+              transform 0.1s ease;
+}
+
+.toolbar-btn:hover {
+  background: #f6f6f6;
+  border-color: #dddddd;
+}
+
+.toolbar-btn:active {
+  transform: scale(0.96);
+}
+.project-panel button,
+.bg-panel button,
+.insert-panel button,
+.project-panel select,
+.bg-panel input,
+.bg-panel select {
+  height: 36px;
+
+  border-radius: 10px;
+  border: 1px solid transparent;
+
+  background: transparent;
+
+  cursor: pointer;
+  font-size: 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  padding: 0 10px;
+
+  transition: background 0.15s ease;
+}
+
+.project-panel button:hover,
+.bg-panel button:hover,
+.insert-panel button:hover {
+  background: #f6f6f6;
+}
+.toolbar-btn {
+  font-weight: 500;
 }
