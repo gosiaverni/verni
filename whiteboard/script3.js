@@ -4,10 +4,6 @@
 const btnBgToggle = document.getElementById("btnBgToggle");
 const bgPanel = document.getElementById("bgPanel");
 
-btnBgToggle.onclick = e => {
-  e.stopPropagation();
-  bgPanel.classList.toggle("hidden");
-};
 const modal = document.getElementById("publicProjectModal");
 const projectNameInput = document.getElementById("projectNameInput");
 const projectCategory = document.getElementById("projectCategory");
@@ -1693,8 +1689,8 @@ y = Math.max(0, Math.min(1080 - 50, y));
     el.focus();
   });
 });
-document.getElementById("undoBtn").onclick = undo;
-document.getElementById("redoBtn").onclick = redo;
+document.getElementById("btnUndo").onclick = undo;
+document.getElementById("btnRedo").onclick = redo;
 board.addEventListener("contextmenu", e => e.preventDefault());
 
 
