@@ -343,6 +343,77 @@ boardBackground.imageFit = "cover";
 
 });
 
+// ======================
+// UNDO / REDO
+// ======================
+
+let historyStack = [];
+let redoStack = [];
+
+const HISTORY_LIMIT = 50;
+
+function cloneState() {
+  return {
+    items: JSON.parse(JSON.stringify(boardItems)),
+    background: JSON.parse(JSON.stringify(boardBackground))
+  };
+}
+
+function pushHistory() {
+  historyStack.push(cloneState());
+
+  if (historyStack.length > HISTORY_LIMIT) {
+    historyStack.shift();
+  }
+
+  // każda nowa akcja kasuje redo
+  redoStack = [];
+}
+
+function restoreState(state) {
+  boardItems = JSON.parse(JSON.stringify(state.items));
+  boardBackground = JSON.parse(JSON.stringify(state.background));
+
+  selectedItem = null;
+
+  renderBoard();
+  applyBoardBackground();
+  saveBoard();
+}
+
+function undo() {
+  if (historyStack.length === 0) return;
+
+  const current = cloneState();
+  redoStack.push(current);
+
+  const prev = historyStack.pop();
+  restoreState(prev);
+}
+
+function redo() {
+  if (redoStack.length === 0) return;
+
+  const current = cloneState();
+  historyStack.push(current);
+
+  const next = redoStack.pop();
+  restoreState(next);
+}
+
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey && e.key === "z") {
+    e.preventDefault();
+    undo();
+  }
+
+  if (e.ctrlKey && e.key === "y") {
+    e.preventDefault();
+    redo();
+  }
+});
+
+
 
 // ======================
 // STAN
@@ -692,6 +763,10 @@ async function saveBoard() {
 
 
 function loadBoard(boardId) {
+  
+
+  historyStack = []; // 🔥
+  redoStack = [];    // 🔥
   const raw = localStorage.getItem("board:" + boardId);
 
   activeBoardId = boardId;
@@ -734,7 +809,8 @@ async function ensurePreviewForCurrentBoard() {
   
 }
 
-
+historyStack = [];
+redoStack = [];
 
 // ======================
 // TŁO
@@ -987,7 +1063,9 @@ function renderBoard() {
   el.contentEditable = true;
   el.focus();
 });
-
+el.addEventListener("focus", () => {
+  pushHistory(); // 🔥 zanim zacznie pisać
+});
 
       el.addEventListener("blur", () => {
         el.contentEditable = false;
@@ -997,11 +1075,13 @@ function renderBoard() {
     }
 
     // SELECT / DRAG
-    el.addEventListener("mousedown", e => {
-      e.stopPropagation();
-      selectedItem = item;
-      updateToolbar();
-      
+   el.addEventListener("mousedown", e => {
+  e.stopPropagation();
+
+  pushHistory(); // 🔥 DODAJ TUTAJ
+
+  selectedItem = item;
+  updateToolbar();
 
       if (item.locked) return;
 
@@ -1014,9 +1094,12 @@ function renderBoard() {
     if (item === selectedItem && !item.locked) {
       const h = document.createElement("div");
       h.className = "resize-handle";
-      h.addEventListener("mousedown", e => {
-        e.stopPropagation();
-        resizingItem = item;
+     h.addEventListener("mousedown", e => {
+  e.stopPropagation();
+
+  pushHistory(); // 🔥 TUTAJ
+
+  resizingItem = item;
         startX = e.clientX;
         startY = e.clientY;
         startWidth = item.width;
@@ -1120,6 +1203,7 @@ async function generateBoardPreview() {
   return croppedCanvas.toDataURL("image/jpeg", 0.7);
 }
 
+
 async function addImage(file) {
 
   const imageId = "img_" + Date.now();
@@ -1136,6 +1220,8 @@ async function addImage(file) {
   }
 
   const maxZ = Math.max(0, ...boardItems.map(i => i.z || 0));
+pushHistory(); // 🔥
+
 
   boardItems.push({
     id: Date.now(),
@@ -1184,6 +1270,8 @@ addTextBtn.addEventListener("click", () => {
 btnDelete.onclick = async () => {
   if (!selectedItem) return;
 
+
+  pushHistory(); // 🔥 TUTAJ
   if (selectedItem.type === "image") {
     await deleteImage(selectedItem.imageId);
 
@@ -1217,6 +1305,7 @@ btnDown.onclick = () => {
 
 btnShape.onclick = () => {
   if (selectedItem.type !== "image") return;
+  pushHistory();
   selectedItem.shape = nextShape(selectedItem.shape);
   saveBoard();
   renderBoard();
@@ -1224,6 +1313,7 @@ btnShape.onclick = () => {
 
 btnRotateLeft.onclick = () => {
   if (selectedItem.locked) return;
+  pushHistory();
   selectedItem.rotation -= 15;
   saveBoard();
   renderBoard();
@@ -1231,24 +1321,28 @@ btnRotateLeft.onclick = () => {
 
 btnRotateRight.onclick = () => {
   if (selectedItem.locked) return;
+  pushHistory();
   selectedItem.rotation += 15;
   saveBoard();
   renderBoard();
 };
 
 btnFlipX.onclick = () => {
+  pushHistory();
   selectedItem.flipX = !selectedItem.flipX;
   saveBoard();
   renderBoard();
 };
 
 btnFlipY.onclick = () => {
+  pushHistory();
   selectedItem.flipY = !selectedItem.flipY;
   saveBoard();
   renderBoard();
 };
 
 btnLock.onclick = () => {
+  pushHistory();
   selectedItem.locked = !selectedItem.locked;
   saveBoard();
   renderBoard();
@@ -1256,66 +1350,77 @@ btnLock.onclick = () => {
 };
 
 btnBold.onclick = () => {
+  pushHistory();
   selectedItem.bold = !selectedItem.bold;
   saveBoard();
   renderBoard();
 };
 
 btnItalic.onclick = () => {
+  pushHistory();
   selectedItem.italic = !selectedItem.italic;
   saveBoard();
   renderBoard();
 };
 
 btnAlignLeft.onclick = () => {
+  pushHistory();
   selectedItem.align = "left";
   saveBoard();
   renderBoard();
 };
 
 btnAlignCenter.onclick = () => {
+  pushHistory();
   selectedItem.align = "center";
   saveBoard();
   renderBoard();
 };
 
 btnAlignRight.onclick = () => {
+  pushHistory();
   selectedItem.align = "right";
   saveBoard();
   renderBoard();
 };
 
 fontSizeInput.oninput = () => {
+  pushHistory();
   selectedItem.fontSize = Number(fontSizeInput.value);
   saveBoard();
   renderBoard();
 };
 
 fontSelect.onchange = () => {
+  pushHistory();
   selectedItem.fontFamily = fontSelect.value;
   saveBoard();
   renderBoard();
 };
 
 textColorInput.oninput = () => {
+  pushHistory();
   selectedItem.color = textColorInput.value;
   saveBoard();
   renderBoard();
 };
 
 btnTextBg.onclick = () => {
+  pushHistory();
   selectedItem.backgroundEnabled = !selectedItem.backgroundEnabled;
   saveBoard();
   renderBoard();
 };
 
 bgOpacityInput.oninput = () => {
+  pushHistory();
   selectedItem.backgroundOpacity = bgOpacityInput.value / 100;
   saveBoard();
   renderBoard();
 };
 
 btnGradient.onclick = () => {
+  pushHistory();
   boardBackground.type = "gradient";
   boardBackground.gradient = {
     from: gradientFrom.value,
@@ -1327,6 +1432,7 @@ btnGradient.onclick = () => {
 };
 
 btnSolid.onclick = () => {
+  pushHistory();
   boardBackground.type = "solid";
   boardBackground.color = gradientFrom.value;
   saveBoard();
@@ -1450,6 +1556,9 @@ y = Math.max(0, Math.min(1080 - 50, y));
     backgroundOpacity: 0.85
   };
 
+  pushHistory(); // 🔥
+
+
   boardItems.push(item);
   selectedItem = item;
 
@@ -1469,7 +1578,8 @@ y = Math.max(0, Math.min(1080 - 50, y));
     el.focus();
   });
 });
-
+document.getElementById("undoBtn").onclick = undo;
+document.getElementById("redoBtn").onclick = redo;
 board.addEventListener("contextmenu", e => e.preventDefault());
 
 
