@@ -1,6 +1,8 @@
 // ======================
 // ELEMENTY HTML
 // ======================
+const SNAP_THRESHOLD = 6;
+const guidesLayer = document.getElementById("guidesLayer");
 const btnInsertShape = document.getElementById("btnInsertShape");
 const btnBgToggle = document.getElementById("btnBgToggle");
 const bgPanel = document.getElementById("bgPanel");
@@ -356,6 +358,54 @@ function withStore(mode, fn) {
 // ======================
 // API
 // ======================
+function getSnap(value, targets) {
+  for (const t of targets) {
+    if (Math.abs(value - t) < SNAP_THRESHOLD) {
+      return t;
+    }
+  }
+  return value;
+}
+function getAlignmentTargets(current) {
+  const targetsX = [];
+  const targetsY = [];
+
+  // środek boardu
+  targetsX.push(1920 / 2);
+  targetsY.push(1080 / 2);
+
+  boardItems.forEach(item => {
+    if (item === current) return;
+
+    // X
+    targetsX.push(item.x); // left
+    targetsX.push(item.x + item.width / 2); // center
+    targetsX.push(item.x + item.width); // right
+
+    // Y
+    targetsY.push(item.y);
+    targetsY.push(item.y + item.height / 2);
+    targetsY.push(item.y + item.height);
+  });
+
+  return { targetsX, targetsY };
+}
+function clearGuides() {
+  guidesLayer.innerHTML = "";
+}
+
+function drawGuide(type, pos) {
+  const line = document.createElement("div");
+  line.className = "guide-line " + type;
+
+  if (type === "vertical") {
+    line.style.left = pos + "px";
+  } else {
+    line.style.top = pos + "px";
+  }
+
+  guidesLayer.appendChild(line);
+}
 function addShape(shape = "square", color = "#6b4eff") {
   const maxZ = Math.max(0, ...boardItems.map(i => i.z || 0));
 
@@ -1725,11 +1775,31 @@ if (resizingItem) {
   renderBoard();
 }
 if (draggingItem) {
+  clearGuides();
 
   let newX = e.clientX / boardScale - offsetX;
   let newY = e.clientY / boardScale - offsetY;
 
-  // 🔒 ograniczenia do boarda
+  const { targetsX, targetsY } = getAlignmentTargets(draggingItem);
+
+  const centerX = newX + draggingItem.width / 2;
+  const centerY = newY + draggingItem.height / 2;
+
+  // SNAP X
+  let snappedCenterX = getSnap(centerX, targetsX);
+  if (snappedCenterX !== centerX) {
+    newX = snappedCenterX - draggingItem.width / 2;
+    drawGuide("vertical", snappedCenterX);
+  }
+
+  // SNAP Y
+  let snappedCenterY = getSnap(centerY, targetsY);
+  if (snappedCenterY !== centerY) {
+    newY = snappedCenterY - draggingItem.height / 2;
+    drawGuide("horizontal", snappedCenterY);
+  }
+
+  // ograniczenia boarda
   newX = Math.max(0, Math.min(1920 - draggingItem.width, newX));
   newY = Math.max(0, Math.min(1080 - draggingItem.height, newY));
 
@@ -1746,6 +1816,7 @@ document.addEventListener("mouseup", () => {
     draggingItem = null;
     resizingItem = null;
     saveBoard();
+    clearGuides();
   }
 
 

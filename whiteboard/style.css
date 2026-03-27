@@ -834,3 +834,26 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+#guidesLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+}
+
+.guide-line {
+  position: absolute;
+  background: #6b4eff;
+  opacity: 0.6;
+}
+
+.guide-line.horizontal {
+  height: 1px;
+  width: 100%;
+}
+
+.guide-line.vertical {
+  width: 1px;
+  height: 100%;
+}
