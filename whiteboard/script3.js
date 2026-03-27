@@ -139,7 +139,21 @@ function loadUserProfileHeader() {
     nameEl.textContent = profile.name;
   }
 }
+function snapToTargets(points, targets) {
+  for (const p of points) {
+    for (const t of targets) {
+      if (Math.abs(p.value - t) < SNAP_THRESHOLD) {
+        return {
+          snapped: true,
+          offset: t - p.value,
+          guide: t
+        };
+      }
+    }
+  }
 
+  return { snapped: false };
+}
 async function syncBoardToSupabase(boardMeta) {
 
   const { data, error: userError } =
@@ -370,19 +384,20 @@ function getAlignmentTargets(current) {
   const targetsX = [];
   const targetsY = [];
 
-  // środek boardu
+  // 🧠 ŚRODEK BOARDU
   targetsX.push(1920 / 2);
   targetsY.push(1080 / 2);
 
+  // 🧠 ELEMENTY
   boardItems.forEach(item => {
     if (item === current) return;
 
-    // X
-    targetsX.push(item.x); // left
-    targetsX.push(item.x + item.width / 2); // center
-    targetsX.push(item.x + item.width); // right
+    // X → left / center / right
+    targetsX.push(item.x);
+    targetsX.push(item.x + item.width / 2);
+    targetsX.push(item.x + item.width);
 
-    // Y
+    // Y → top / center / bottom
     targetsY.push(item.y);
     targetsY.push(item.y + item.height / 2);
     targetsY.push(item.y + item.height);
@@ -1782,21 +1797,46 @@ if (draggingItem) {
 
   const { targetsX, targetsY } = getAlignmentTargets(draggingItem);
 
+  const left = newX;
+  const right = newX + draggingItem.width;
   const centerX = newX + draggingItem.width / 2;
+
+  const top = newY;
+  const bottom = newY + draggingItem.height;
   const centerY = newY + draggingItem.height / 2;
 
-  // SNAP X
-  let snappedCenterX = getSnap(centerX, targetsX);
-  if (snappedCenterX !== centerX) {
-    newX = snappedCenterX - draggingItem.width / 2;
-    drawGuide("vertical", snappedCenterX);
+  // ======================
+  // SNAP X (edge + center)
+  // ======================
+  const snapX = snapToTargets(
+    [
+      { type: "left", value: left },
+      { type: "center", value: centerX },
+      { type: "right", value: right }
+    ],
+    targetsX
+  );
+
+  if (snapX.snapped) {
+    newX += snapX.offset;
+    drawGuide("vertical", snapX.guide);
   }
 
-  // SNAP Y
-  let snappedCenterY = getSnap(centerY, targetsY);
-  if (snappedCenterY !== centerY) {
-    newY = snappedCenterY - draggingItem.height / 2;
-    drawGuide("horizontal", snappedCenterY);
+  // ======================
+  // SNAP Y (edge + center)
+  // ======================
+  const snapY = snapToTargets(
+    [
+      { type: "top", value: top },
+      { type: "center", value: centerY },
+      { type: "bottom", value: bottom }
+    ],
+    targetsY
+  );
+
+  if (snapY.snapped) {
+    newY += snapY.offset;
+    drawGuide("horizontal", snapY.guide);
   }
 
   // ograniczenia boarda
