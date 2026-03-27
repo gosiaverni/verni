@@ -1,6 +1,7 @@
 // ======================
 // ELEMENTY HTML
 // ======================
+const btnInsertShape = document.getElementById("btnInsertShape");
 const btnBgToggle = document.getElementById("btnBgToggle");
 const bgPanel = document.getElementById("bgPanel");
 
@@ -355,6 +356,35 @@ function withStore(mode, fn) {
 // ======================
 // API
 // ======================
+function addShape(shape = "square", color = "#6b4eff") {
+  const maxZ = Math.max(0, ...boardItems.map(i => i.z || 0));
+
+  pushHistory();
+
+  boardItems.push({
+    id: Date.now(),
+    type: "shape",
+
+    shape, // square, circle, triangle itd
+    color,
+
+    x: 120,
+    y: 120,
+    width: 120,
+    height: 120,
+
+    rotation: 0,
+    flipX: false,
+    flipY: false,
+    locked: false,
+
+    z: maxZ + 1
+  });
+
+  saveBoard();
+  renderBoard();
+}
+
 
 function saveImage(id, blob) {
   return withStore("readwrite", (store, resolve, reject) => {
@@ -1057,18 +1087,31 @@ function updateToolbar() {
 
   btnShape.style.display =
     selectedItem.type === "image" ? "inline-block" : "none";
+const shapePicker = document.getElementById("shapePicker");
 
-  btnBold.style.display =
-  btnItalic.style.display =
-  btnAlignLeft.style.display =
-  btnAlignCenter.style.display =
-  btnAlignRight.style.display =
-  btnTextBg.style.display =
-  bgOpacityInput.style.display =
-  fontSelect.style.display =
-  fontSizeInput.style.display =
-  textColorInput.style.display =
-    selectedItem.type === "text" ? "inline-block" : "none";
+shapePicker.style.display =
+  selectedItem?.type === "shape" ? "flex" : "none";
+ const isText = selectedItem.type === "text";
+const isShape = selectedItem.type === "shape";
+document.querySelectorAll("#shapePicker button").forEach(btn => {
+  btn.classList.toggle(
+    "active",
+    selectedItem?.shape === btn.dataset.shape
+  );
+});
+btnBold.style.display =
+btnItalic.style.display =
+btnAlignLeft.style.display =
+btnAlignCenter.style.display =
+btnAlignRight.style.display =
+btnTextBg.style.display =
+bgOpacityInput.style.display =
+fontSelect.style.display =
+fontSizeInput.style.display =
+  isText ? "inline-block" : "none";
+
+textColorInput.style.display =
+  (isText || isShape) ? "inline-block" : "none";
 
   btnLock.textContent = selectedItem.locked ? "🔓" : "🔒";
 
@@ -1081,24 +1124,41 @@ function updateToolbar() {
     );
   }
 }
+btnInsertShape.onclick = () => {
+  addShape("square", "#000000"); // czarny kwadrat
+  insertPanel.classList.add("hidden");
+};
 
+document.getElementById("shapePicker").addEventListener("click", e => {
+  const btn = e.target.closest("button");
+  if (!btn || !selectedItem || selectedItem.type !== "shape") return;
+
+  pushHistory();
+
+  selectedItem.shape = btn.dataset.shape;
+
+  saveBoard();
+  renderBoard();
+});
 // ======================
 // RENDER
 // ======================
 
 function renderBoard() {
- boardInner.querySelectorAll(".board-item").forEach(el => el.remove());
-
+  boardInner.querySelectorAll(".board-item").forEach(el => el.remove());
 
   boardItems.forEach(item => {
     const el = document.createElement("div");
     el.className = "board-item";
+
+    // POZYCJA
     el.style.left = item.x + "px";
     el.style.top = item.y + "px";
     el.style.width = item.width + "px";
     el.style.height = item.height + "px";
     el.style.zIndex = item.z;
 
+    // TRANSFORM
     const r = item.rotation || 0;
     const sx = item.flipX ? -1 : 1;
     const sy = item.flipY ? -1 : 1;
@@ -1107,29 +1167,87 @@ function renderBoard() {
     if (item === selectedItem) el.classList.add("selected");
     if (item.locked) el.classList.add("locked");
 
-    if (item.type === "image") {
-  el.classList.add("shape-" + item.shape);
+    // ======================
+    // SHAPE
+    // ======================
+    if (item.type === "shape") {
+  const shapeInner = document.createElement("div");
 
-  const img = document.createElement("img");
-  img.draggable = false;
-  el.appendChild(img);
+  shapeInner.style.width = "100%";
+  shapeInner.style.height = "100%";
 
-  getImage(item.imageId).then(blob => {
-  if (!blob) return;
+  // default (square)
+  shapeInner.style.background = item.color;
 
-  let url = imageUrlCache.get(item.imageId);
-  if (!url) {
-    url = URL.createObjectURL(blob);
-    imageUrlCache.set(item.imageId, url);
+  // circle
+  if (item.shape === "circle") {
+    shapeInner.style.borderRadius = "50%";
   }
 
-  img.src = url;
-});
+  // rounded
+  if (item.shape === "round") {
+    shapeInner.style.borderRadius = "16px";
+  }
 
+  // triangle
+  if (item.shape === "triangle") {
+    shapeInner.style.background = "none";
+
+    shapeInner.style.width = "0";
+    shapeInner.style.height = "0";
+
+    shapeInner.style.borderLeft = `${item.width / 2}px solid transparent`;
+    shapeInner.style.borderRight = `${item.width / 2}px solid transparent`;
+    shapeInner.style.borderBottom = `${item.height}px solid ${item.color}`;
+
+    shapeInner.style.margin = "auto";
+  }
+
+  // star
+  if (item.shape === "star") {
+    shapeInner.style.clipPath = `polygon(
+      50% 0%,
+      61% 35%,
+      98% 35%,
+      68% 57%,
+      79% 91%,
+      50% 70%,
+      21% 91%,
+      32% 57%,
+      2% 35%,
+      39% 35%
+    )`;
+  }
+
+  el.appendChild(shapeInner);
 }
 
+    // ======================
+    // IMAGE
+    // ======================
+    if (item.type === "image") {
+      el.classList.add("shape-" + item.shape);
 
+      const img = document.createElement("img");
+      img.draggable = false;
+      el.appendChild(img);
+
+      getImage(item.imageId).then(blob => {
+        if (!blob) return;
+
+        let url = imageUrlCache.get(item.imageId);
+        if (!url) {
+          url = URL.createObjectURL(blob);
+          imageUrlCache.set(item.imageId, url);
+        }
+
+        img.src = url;
+      });
+    }
+
+    // ======================
     // TEXT
+    // ======================
     if (item.type === "text") {
       el.classList.add("board-text");
       el.textContent = item.text;
@@ -1144,17 +1262,16 @@ function renderBoard() {
         ? `rgba(255,255,255,${item.backgroundOpacity})`
         : "transparent";
 
-    el.addEventListener("click", e => {
-  if (item.locked) return;
+      el.addEventListener("click", e => {
+        if (item.locked) return;
+        e.stopPropagation();
+        el.contentEditable = true;
+        el.focus();
+      });
 
-  e.stopPropagation();
-
-  el.contentEditable = true;
-  el.focus();
-});
-el.addEventListener("focus", () => {
-  pushHistory(); // 🔥 zanim zacznie pisać
-});
+      el.addEventListener("focus", () => {
+        pushHistory();
+      });
 
       el.addEventListener("blur", () => {
         el.contentEditable = false;
@@ -1163,14 +1280,16 @@ el.addEventListener("focus", () => {
       });
     }
 
+    // ======================
     // SELECT / DRAG
-   el.addEventListener("mousedown", e => {
-  e.stopPropagation();
+    // ======================
+    el.addEventListener("mousedown", e => {
+      e.stopPropagation();
 
-  pushHistory(); // 🔥 DODAJ TUTAJ
+      pushHistory();
 
-  selectedItem = item;
-  updateToolbar();
+      selectedItem = item;
+      updateToolbar();
 
       if (item.locked) return;
 
@@ -1179,21 +1298,24 @@ el.addEventListener("focus", () => {
       offsetY = e.clientY / boardScale - item.y;
     });
 
+    // ======================
     // RESIZE
+    // ======================
     if (item === selectedItem && !item.locked) {
       const h = document.createElement("div");
       h.className = "resize-handle";
-     h.addEventListener("mousedown", e => {
-  e.stopPropagation();
 
-  pushHistory(); // 🔥 TUTAJ
+      h.addEventListener("mousedown", e => {
+        e.stopPropagation();
+        pushHistory();
 
-  resizingItem = item;
+        resizingItem = item;
         startX = e.clientX;
         startY = e.clientY;
         startWidth = item.width;
         startHeight = item.height;
       });
+
       el.appendChild(h);
     }
 
@@ -1518,7 +1640,15 @@ fontSelect.onchange = () => {
 
 textColorInput.oninput = () => {
   pushHistory();
-  selectedItem.color = textColorInput.value;
+
+  if (selectedItem.type === "text") {
+    selectedItem.color = textColorInput.value;
+  }
+
+  if (selectedItem.type === "shape") {
+    selectedItem.color = textColorInput.value;
+  }
+
   saveBoard();
   renderBoard();
 };
