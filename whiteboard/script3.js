@@ -1,7 +1,7 @@
 // ======================
 // ELEMENTY HTML
 // ======================
-const SNAP_THRESHOLD = 6;
+const SNAP_THRESHOLD = 8;
 const guidesLayer = document.getElementById("guidesLayer");
 const btnInsertShape = document.getElementById("btnInsertShape");
 const btnBgToggle = document.getElementById("btnBgToggle");
@@ -18,6 +18,7 @@ const btnProjectToggle = document.getElementById("btnProjectToggle");
 const projectPanel = document.getElementById("projectPanel");
 const btnInsertToggle = document.getElementById("btnInsertToggle");
 const insertPanel = document.getElementById("insertPanel");
+const projectTitle = document.getElementById("projectTitle");
 
 btnInsertToggle.onclick = e => {
   e.stopPropagation();
@@ -140,16 +141,30 @@ function loadUserProfileHeader() {
   }
 }
 function snapToTargets(points, targets) {
+  let best = null;
+
   for (const p of points) {
     for (const t of targets) {
-      if (Math.abs(p.value - t) < SNAP_THRESHOLD) {
-        return {
-          snapped: true,
-          offset: t - p.value,
-          guide: t
-        };
+      const dist = Math.abs(p.value - t);
+
+      if (dist < SNAP_THRESHOLD) {
+        if (!best || dist < best.dist) {
+          best = {
+            dist,
+            offset: t - p.value,
+            guide: t
+          };
+        }
       }
     }
+  }
+
+  if (best) {
+    return {
+      snapped: true,
+      offset: best.offset,
+      guide: best.guide
+    };
   }
 
   return { snapped: false };
@@ -286,19 +301,7 @@ const btnSolid = document.getElementById("btnSolid");
 const ZOOM_STEP = 0.08;
 const PAN_SENSITIVITY = 0.6; // 0.3 = bardzo delikatnie, 1 = jak teraz
 
-const btnRenameBoard = document.getElementById("btnRenameBoard");
 
-btnRenameBoard.onclick = () => {
-  const index = loadBoardsIndex();
-  const current = index.boards.find(b => b.id === activeBoardId);
-  if (!current) return;
-
-  const name = prompt("Nowa nazwa boardu:", current.name);
-  if (!name) return;
-
-  renameBoard(activeBoardId, name);
-  renderBoardsList();
-};
 const btnDeleteBoard = document.getElementById("btnDeleteBoard");
 
 btnDeleteBoard.onclick = () => {
@@ -967,9 +970,40 @@ if (!boardBackground.effect) {
   renderBoard();
   syncBoardPublicToggle();
   ensurePreviewForCurrentBoard();
+  const index = loadBoardsIndex();
+const b = index.boards.find(b => b.id === activeBoardId);
 
+if (b && projectTitle) {
+  projectTitle.textContent = b.name;
 }
 
+}
+projectTitle.addEventListener("blur", () => {
+  const name = projectTitle.textContent.trim();
+  if (!name) return;
+
+  const index = loadBoardsIndex();
+  const b = index.boards.find(b => b.id === activeBoardId);
+
+  if (!b) return;
+
+  b.name = name;
+  b.updated = Date.now();
+
+  saveBoardsIndex(index);
+  renderBoardsList();
+
+  syncBoardToSupabase(b);
+});
+projectTitle.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    projectTitle.blur();
+  }
+});
+projectTitle.addEventListener("focus", () => {
+  document.execCommand("selectAll", false, null);
+});
 async function ensurePreviewForCurrentBoard() {
   const index = loadBoardsIndex();
   const b = index.boards.find(x => x.id === activeBoardId);
