@@ -148,8 +148,10 @@
 <div id="board">
   <div id="boardInner">
     <div id="guidesLayer"></div>
+    
     <div id="boardBackgroundLayer"></div>
   </div>
+  <div id="cropOverlay" class="crop-overlay hidden"></div>
 </div>
 
 
@@ -176,6 +178,7 @@
   <button id="btnAlignLeft" title="Do lewej">⬅</button>
   <button id="btnAlignCenter" title="Wyśrodkuj">↔</button>
   <button id="btnAlignRight" title="Do prawej">➡</button>
+  <button id="btnAlignJustify" title="Wyjustuj">☰</button>
 
   <!-- TRANSFORM -->
   <button id="btnRotateLeft" title="Obrót w lewo">⟲</button>
@@ -215,12 +218,15 @@
 
   <!-- OBRAZ -->
   <button id="btnShape" title="Kształt">🔲</button>
+    <button id="btnCrop">✂️</button>
   <div id="shapePicker" class="shape-picker hidden">
   <button data-shape="square">⬛</button>
   <button data-shape="round">▢</button>
   <button data-shape="circle">⚫</button>
   <button data-shape="triangle">🔺</button>
   <button data-shape="star">⭐</button>
+
+
 </div>
 
   <!-- KOLORY -->

@@ -29,16 +29,14 @@ html, body {
   position: relative;
   z-index: 10;
 }
-#board {
-  position: absolute;
-  top: 120px;
 
-  left: 72px;
+#board {
+  position: relative;
   width: calc(100vw - 72px);
   height: calc(100vh - 120px);
-
-  overflow: hidden;
+  margin-left: 72px;
 }
+
 
 
 * {
@@ -251,14 +249,15 @@ body {
 ====================== */
 
 .board-text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block; /* ❌ zamiast flex */
+  
   padding: 6px;
+
   white-space: pre-wrap;
+  word-break: break-word;      /* 🔥 NOWE */
+  overflow-wrap: break-word;   /* 🔥 NOWE */
+
   overflow: hidden;
-  cursor: move;
-  border: none;
 }
 
 .board-item[contenteditable="true"] {
@@ -728,9 +727,7 @@ body {
   transition: background 0.15s ease;
 }
 
-.file-btn:hover {
-  background: #f6f6f6;
-}
+
 
 .file-btn input {
   display: none;
@@ -857,11 +854,7 @@ body {
   width: 1px;
   height: 100%;
 }
-#controls {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
+
 
 .project-title {
   font-weight: 600;
@@ -876,3 +869,62 @@ body {
 .project-title:focus {
   background: #eeeeee;
 }
+.board-item.board-text {
+  display: block;
+}
+
+.board-item.cropping {
+  outline: 2px solid #6b4eff;
+  cursor: grab;
+}
+
+
+
+.board-item.cropping:active {
+  cursor: grabbing;
+}
+.crop-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9997;
+}
+
+#board {
+  position: relative; /* 🔥 KONIECZNE */
+}
+
+.crop-hole {
+  position: absolute;
+  border: 2px solid #6b4eff;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+ 
+}
+
+.crop-overlay {
+  pointer-events: none;
+}
+
+.crop-hole {
+  pointer-events: all; /* 👈 pozwala dzieciom działać */
+}
+
+.crop-handle {
+  pointer-events: all;
+}
+.crop-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: white;
+  border: 2px solid #6b4eff;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* rogi */
+.crop-tl { left: -6px; top: -6px; cursor: nwse-resize; }
+.crop-tr { right: -6px; top: -6px; cursor: nesw-resize; }
+.crop-bl { left: -6px; bottom: -6px; cursor: nesw-resize; }
+.crop-br { right: -6px; bottom: -6px; cursor: nwse-resize; }

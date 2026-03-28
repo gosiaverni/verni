@@ -1,11 +1,124 @@
 // ======================
 // ELEMENTY HTML
 // ======================
+
+let lastMouseX = 0;
+let lastMouseY = 0;
+let isCropResizing = false;
+let cropResizeDir = null;
+let cropMode = false;
+let croppingItem = null;
+let cropStartX = 0;
+let cropStartY = 0;
+ let isCroppingDrag = false;
+const btnCrop = document.getElementById("btnCrop");
+const cropOverlay = document.getElementById("cropOverlay");
+function updateCropOverlay() {
+  cropOverlay.innerHTML = "";
+
+  if (!cropMode || !croppingItem) {
+    cropOverlay.classList.add("hidden");
+    return;
+  }
+
+  cropOverlay.classList.remove("hidden");
+
+  const hole = document.createElement("div");
+  hole.className = "crop-hole";
+
+  const rect = board.getBoundingClientRect();
+
+const scaleX = croppingItem.width / croppingItem.crop.width;
+const scaleY = croppingItem.height / croppingItem.crop.height;
+
+const x =
+  (croppingItem.x) * boardScale + boardOffsetX;
+
+const y =
+  (croppingItem.y) * boardScale + boardOffsetY;
+
+const w = croppingItem.width * boardScale;
+const h = croppingItem.height * boardScale;
+
+  hole.style.left = x + "px";
+  hole.style.top = y + "px";
+  hole.style.width = w + "px";
+  hole.style.height = h + "px";
+
+  cropOverlay.appendChild(hole);
+  const handles = ["tl", "tr", "bl", "br"];
+
+handles.forEach(dir => {
+  const h = document.createElement("div");
+  h.className = "crop-handle crop-" + dir;
+
+ h.addEventListener("mousedown", e => {
+  e.stopPropagation();
+
+  isCropResizing = true;
+  isCroppingDrag = false;
+  cropResizeDir = dir;
+
+  lastMouseX = e.clientX;
+  lastMouseY = e.clientY;
+
+  pushHistory();
+});
+
+  hole.appendChild(h);
+});
+}
+
+btnCrop.onclick = () => {
+  if (!selectedItem || selectedItem.type !== "image") return;
+saveBoard(); // już masz 👍
+if (cropMode && croppingItem === selectedItem) {
+  cropMode = false;
+  croppingItem = null;
+  board.style.cursor = "default";
+
+  saveBoard(); // 🔥 JUŻ MASZ OK
+  renderBoard(); // 🔥 DODAJ TO
+
+  updateCropOverlay();
+  return;
+}
+
+  // WEJŚCIE W CROPA
+  cropMode = true;
+  croppingItem = selectedItem;
+
+selectedItem.crop ??= {
+  x: 0,
+  y: 0,
+  width: selectedItem.originalWidth,
+  height: selectedItem.originalHeight
+};
+  board.style.cursor = "grab";
+};
 const SNAP_THRESHOLD = 8;
 const guidesLayer = document.getElementById("guidesLayer");
 const btnInsertShape = document.getElementById("btnInsertShape");
 const btnBgToggle = document.getElementById("btnBgToggle");
 const bgPanel = document.getElementById("bgPanel");
+const btnAlignJustify = document.getElementById("btnAlignJustify");
+btnAlignJustify.onclick = () => {
+  if (!selectedItem || selectedItem.type !== "text") return;
+
+  pushHistory();
+
+  selectedItem.align = getNextAlign(selectedItem.align || "left");
+
+  saveBoard();
+  renderBoard();
+  updateToolbar();
+};
+const ALIGN_MODES = ["left", "center", "right", "justify"];
+
+function getNextAlign(current) {
+  const i = ALIGN_MODES.indexOf(current);
+  return ALIGN_MODES[(i + 1) % ALIGN_MODES.length];
+}
 
 const modal = document.getElementById("publicProjectModal");
 const projectNameInput = document.getElementById("projectNameInput");
@@ -329,6 +442,7 @@ btnBgToggle.onclick = e => {
     gradientDirection.value = boardBackground.gradient.direction;
   }
 };
+
 // ======================
 // INDEXEDDB – MINIMAL WRAPPER
 // ======================
@@ -429,25 +543,21 @@ function addShape(shape = "square", color = "#6b4eff") {
 
   pushHistory();
 
-  boardItems.push({
-    id: Date.now(),
-    type: "shape",
-
-    shape, // square, circle, triangle itd
-    color,
-
-    x: 120,
-    y: 120,
-    width: 120,
-    height: 120,
-
-    rotation: 0,
-    flipX: false,
-    flipY: false,
-    locked: false,
-
-    z: maxZ + 1
-  });
+boardItems.push({
+  id: Date.now(),
+  type: "shape",
+  x: 100,
+  y: 100,
+  width: 120,
+  height: 120,
+  shape,
+  color,
+  rotation: 0,
+  flipX: false,
+  flipY: false,
+  locked: false,
+  z: maxZ + 1
+});
 
   saveBoard();
   renderBoard();
@@ -862,7 +972,7 @@ function applyZoom() {
   let offsetX = (rect.width - boardWidth) / 2;
   let offsetY = (rect.height - boardHeight) / 2;
 
- offsetY += 5;
+
 
   if (boardWidth > rect.width) {
     const minX = rect.width - boardWidth - padding; // 🔥 ZMIANA
@@ -946,8 +1056,10 @@ function loadBoard(boardId) {
 
   activeBoardId = boardId;
   boardScale = DEFAULT_SCALE;
-boardOffsetX = 0;
-boardOffsetY = 0;
+const rect = board.getBoundingClientRect();
+
+boardOffsetX = (rect.width - 1920 * boardScale) / 2;
+boardOffsetY = (rect.height - 1080 * boardScale) / 2;
   applyZoom();
 
   if (!raw) {
@@ -1074,11 +1186,14 @@ bgLayer.classList.add("effect-" + (boardBackground.effect || "none"));
     bgLayer.style.backgroundPosition = "center";
   }
 }
-function resetView() {
- boardScale = DEFAULT_SCALE;
 
-  boardOffsetX = 0;
-  boardOffsetY = 0;
+function resetView() {
+  boardScale = DEFAULT_SCALE;
+
+  const rect = board.getBoundingClientRect();
+
+  boardOffsetX = (rect.width - 1920 * boardScale) / 2;
+  boardOffsetY = (rect.height - 1080 * boardScale) / 2;
 
   applyZoom();
 }
@@ -1192,17 +1307,34 @@ shapePicker.style.display =
   selectedItem?.type === "shape" ? "flex" : "none";
  const isText = selectedItem.type === "text";
 const isShape = selectedItem.type === "shape";
+btnCrop.style.display =
+  selectedItem?.type === "image" ? "inline-block" : "none";
 document.querySelectorAll("#shapePicker button").forEach(btn => {
   btn.classList.toggle(
     "active",
     selectedItem?.shape === btn.dataset.shape
   );
 });
+const icons = {
+  left: "⬅",
+  center: "↔",
+  right: "➡",
+  justify: "☰"
+};
+
+if (selectedItem?.type === "text") {
+  btnAlignJustify.textContent = icons[selectedItem.align] || "⬅";
+}
+btnAlignLeft.classList.toggle("active", selectedItem.align === "left");
+btnAlignCenter.classList.toggle("active", selectedItem.align === "center");
+btnAlignRight.classList.toggle("active", selectedItem.align === "right");
+btnAlignJustify.classList.toggle("active", selectedItem.align === "justify");
 btnBold.style.display =
 btnItalic.style.display =
 btnAlignLeft.style.display =
 btnAlignCenter.style.display =
 btnAlignRight.style.display =
+btnAlignJustify.style.display =
 btnTextBg.style.display =
 bgOpacityInput.style.display =
 fontSelect.style.display =
@@ -1222,6 +1354,7 @@ textColorInput.style.display =
       (selectedItem.backgroundOpacity ?? 0.85) * 100
     );
   }
+  
 }
 btnInsertShape.onclick = () => {
   addShape("square", "#000000"); // czarny kwadrat
@@ -1265,7 +1398,9 @@ function renderBoard() {
 
     if (item === selectedItem) el.classList.add("selected");
     if (item.locked) el.classList.add("locked");
-
+if (cropMode && item === croppingItem) {
+  el.classList.add("cropping");
+}
     // ======================
     // SHAPE
     // ======================
@@ -1319,6 +1454,7 @@ function renderBoard() {
   }
 
   el.appendChild(shapeInner);
+ 
 }
 
     // ======================
@@ -1330,7 +1466,21 @@ function renderBoard() {
       const img = document.createElement("img");
       img.draggable = false;
       el.appendChild(img);
+img.style.position = "absolute";
 
+if (item.crop && item.originalWidth) {
+  const scaleX = item.width / item.crop.width;
+  const scaleY = item.height / item.crop.height;
+
+  const imgScaleX = item.width / item.crop.width;
+  const imgScaleY = item.height / item.crop.height;
+
+  img.style.width = item.originalWidth * imgScaleX + "px";
+  img.style.height = item.originalHeight * imgScaleY + "px";
+
+  img.style.left = -item.crop.x * imgScaleX + "px";
+  img.style.top = -item.crop.y * imgScaleY + "px";
+}
       getImage(item.imageId).then(blob => {
         if (!blob) return;
 
@@ -1341,6 +1491,8 @@ function renderBoard() {
         }
 
         img.src = url;
+
+
       });
     }
 
@@ -1349,7 +1501,7 @@ function renderBoard() {
     // ======================
     if (item.type === "text") {
       el.classList.add("board-text");
-      el.textContent = item.text;
+      el.innerText = item.text;
       el.style.fontSize = item.fontSize + "px";
       el.style.fontFamily = item.fontFamily;
       el.style.color = item.color;
@@ -1374,28 +1526,46 @@ function renderBoard() {
 
       el.addEventListener("blur", () => {
         el.contentEditable = false;
-        item.text = el.textContent;
+        item.text = el.innerHTML;
         saveBoard();
       });
     }
+el.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    e.preventDefault();
 
+    document.execCommand("insertLineBreak");
+  }
+});
     // ======================
     // SELECT / DRAG
     // ======================
-    el.addEventListener("mousedown", e => {
-      e.stopPropagation();
+el.addEventListener("mousedown", e => {
+  
+  e.stopPropagation();
 
-      pushHistory();
+  selectedItem = item;
+  updateToolbar();
 
-      selectedItem = item;
-      updateToolbar();
+  if (item.locked) return;
 
-      if (item.locked) return;
+if (cropMode && item === croppingItem) {
+  if (!isCropResizing) {
+    isCroppingDrag = true;
 
-      draggingItem = item;
-      offsetX = e.clientX / boardScale - item.x;
-      offsetY = e.clientY / boardScale - item.y;
-    });
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+  }
+  return;
+}
+  pushHistory();
+
+  draggingItem = item;
+  offsetX = e.clientX / boardScale - item.x;
+  offsetY = e.clientY / boardScale - item.y;
+  lastMouseX = e.clientX;
+lastMouseY = e.clientY;
+});
 
     // ======================
     // RESIZE
@@ -1413,13 +1583,17 @@ function renderBoard() {
         startY = e.clientY;
         startWidth = item.width;
         startHeight = item.height;
+        lastMouseX = e.clientX;
+lastMouseY = e.clientY;
       });
+    
 
       el.appendChild(h);
     }
 
     boardInner.appendChild(el);
   });
+   updateCropOverlay();
 }
 
 // ======================
@@ -1521,7 +1695,6 @@ async function addImage(file) {
 
   let storagePath = null;
 
-  // 🔽 upload tylko jeśli board jest publiczny
   const index = loadBoardsIndex();
   const b = index.boards.find(b => b.id === activeBoardId);
 
@@ -1530,14 +1703,13 @@ async function addImage(file) {
   }
 
   const maxZ = Math.max(0, ...boardItems.map(i => i.z || 0));
-pushHistory(); // 🔥
+  pushHistory();
 
-
-  boardItems.push({
+  const item = {
     id: Date.now(),
     type: "image",
     imageId,
-    storagePath,   // ⬅⬅⬅ nowa właściwość
+    storagePath,
     x: 100,
     y: 100,
     width: 240,
@@ -1547,16 +1719,27 @@ pushHistory(); // 🔥
     flipX: false,
     flipY: false,
     locked: false,
-    z: maxZ + 1
-  });
+    z: maxZ + 1,
+    originalWidth: null,
+    originalHeight: null
+  };
+
+  boardItems.push(item);
+
+  // 🔥 TU JEST KLUCZ
+  const img = new Image();
+  img.onload = () => {
+    item.originalWidth = img.width;
+    item.originalHeight = img.height;
+
+    saveBoard();
+    renderBoard();
+  };
+  img.src = URL.createObjectURL(file);
 
   saveBoard();
   renderBoard();
 }
-
-
-
-
 
 
 boardImageInput.addEventListener("change", e => {
@@ -1805,23 +1988,112 @@ document.addEventListener("mousemove", e => {
   return;
 }
 
-
 if (resizingItem) {
 
-  let newWidth =
-    Math.max(40, startWidth + (e.clientX - startX) / boardScale);
+  const dx = (e.clientX - lastMouseX) / boardScale;
+  const dy = (e.clientY - lastMouseY) / boardScale;
 
-  let newHeight =
-    Math.max(40, startHeight + (e.clientY - startY) / boardScale);
+  resizingItem.width = Math.max(40, resizingItem.width + dx);
+  resizingItem.height = Math.max(40, resizingItem.height + dy);
 
-  // 🔒 ograniczenie do krawędzi
-  newWidth = Math.min(newWidth, 1920 - resizingItem.x);
-  newHeight = Math.min(newHeight, 1080 - resizingItem.y);
+  // 🔒 LIMIT
+  resizingItem.width = Math.min(resizingItem.width, 1920 - resizingItem.x);
+  resizingItem.height = Math.min(resizingItem.height, 1080 - resizingItem.y);
 
-  resizingItem.width = newWidth;
-  resizingItem.height = newHeight;
+  lastMouseX = e.clientX;
+  lastMouseY = e.clientY;
 
   renderBoard();
+}
+if (cropMode && croppingItem && isCropResizing) {
+if (!croppingItem.originalWidth) return;
+  const dx = (e.clientX - lastMouseX) / boardScale;
+  const dy = (e.clientY - lastMouseY) / boardScale;
+
+  const crop = croppingItem.crop;
+
+  let newX = crop.x;
+  let newY = crop.y;
+  let newW = crop.width;
+  let newH = crop.height;
+
+  if (cropResizeDir === "br") {
+    newW += dx;
+    newH += dy;
+  }
+
+  if (cropResizeDir === "tl") {
+    newX += dx;
+    newY += dy;
+    newW -= dx;
+    newH -= dy;
+  }
+
+  if (cropResizeDir === "tr") {
+    newY += dy;
+    newW += dx;
+    newH -= dy;
+  }
+
+  if (cropResizeDir === "bl") {
+    newX += dx;
+    newW -= dx;
+    newH += dy;
+  }
+
+  // ✅ CLAMP zamiast return
+  newW = Math.max(40, newW);
+  newH = Math.max(40, newH);
+
+  newX = Math.max(0, newX);
+  newY = Math.max(0, newY);
+
+newW = Math.min(newW, croppingItem.originalWidth - newX);
+newH = Math.min(newH, croppingItem.originalHeight - newY);
+
+  crop.x = newX;
+  crop.y = newY;
+  crop.width = newW;
+  crop.height = newH;
+
+  lastMouseX = e.clientX;
+  lastMouseY = e.clientY;
+
+  renderBoard();
+  
+}
+if (cropMode && croppingItem && isCroppingDrag) {
+  const scaleX = croppingItem.crop.width / croppingItem.width;
+const scaleY = croppingItem.crop.height / croppingItem.height;
+
+const dx = (e.clientX - lastMouseX) / boardScale * scaleX;
+const dy = (e.clientY - lastMouseY) / boardScale * scaleY;
+croppingItem.crop.x += dx;
+croppingItem.crop.y += dy;
+
+lastMouseX = e.clientX;
+lastMouseY = e.clientY;
+
+  // 🔒 LIMIT
+croppingItem.crop.x = Math.max(
+  0,
+  Math.min(
+    croppingItem.originalWidth - croppingItem.crop.width,
+    croppingItem.crop.x
+  )
+);
+
+croppingItem.crop.y = Math.max(
+  0,
+  Math.min(
+    croppingItem.originalHeight - croppingItem.crop.height,
+    croppingItem.crop.y
+  )
+);
+
+  renderBoard();
+  
+  
 }
 if (draggingItem) {
   clearGuides();
@@ -1886,6 +2158,11 @@ if (draggingItem) {
 
 
 document.addEventListener("mouseup", () => {
+  if (isCroppingDrag) {
+    isCroppingDrag = false;
+    saveBoard();
+  }
+
   if (draggingItem || resizingItem) {
     draggingItem = null;
     resizingItem = null;
@@ -1893,12 +2170,17 @@ document.addEventListener("mouseup", () => {
     clearGuides();
   }
 
-
   if (isRightPanning) {
     isRightPanning = false;
     board.style.cursor = "default";
   }
+  if (isCropResizing) {
+  isCropResizing = false;
+  cropResizeDir = null;
+  saveBoard();
+}
 });
+
 board.addEventListener("mousedown", e => {
   if (!textInsertMode) return;
   if (e.button !== 0) return; // tylko lewy klik
@@ -2007,6 +2289,7 @@ board.addEventListener("wheel", e => {
 
 function zoomToCenter(delta) {
   const rect = board.getBoundingClientRect();
+
   const centerX = rect.width / 2;
   const centerY = rect.height / 2;
 
