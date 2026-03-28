@@ -213,7 +213,7 @@ b.meta = {
   description: projectDescription.value,
   tags: projectTags.value
     .split(",")
-    .map(t => t.trim())
+    .map(t => t.trim().replace(/^#/, "").toLowerCase())
     .filter(Boolean),
 
   categories: Array.from(projectCategory.selectedOptions).map(o => o.value)
@@ -253,6 +253,7 @@ function loadUserProfileHeader() {
     nameEl.textContent = profile.name;
   }
 }
+
 function snapToTargets(points, targets) {
   let best = null;
 

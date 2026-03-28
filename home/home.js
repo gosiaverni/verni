@@ -316,16 +316,30 @@ if (searchQuery) {
 
   const words = searchQuery.split(" ").filter(Boolean);
 
+  const tagFilters = words
+    .filter(w => w.startsWith("#"))
+    .map(w => w.slice(1));
+
+  const textFilters = words.filter(w => !w.startsWith("#"));
+
   feed = feed.filter(b => {
 
     const description = b.meta?.description?.toLowerCase() || "";
-    const tags = (b.meta?.tags || []).join(" ").toLowerCase();
+    const tags = (b.meta?.tags || []).map(t => t.toLowerCase());
     const categories = (b.meta?.categories || []).join(" ").toLowerCase();
     const handle = (b.ownerHandle || "").toLowerCase();
 
-    const fullText = `${description} ${tags} ${categories} ${handle}`;
+    // 🔍 tekst
+    const matchesText = textFilters.every(word =>
+      `${description} ${categories} ${handle}`.includes(word)
+    );
 
-    return words.every(word => fullText.includes(word));
+    // 🔖 tagi
+    const matchesTags = tagFilters.every(tag =>
+      tags.includes(tag)
+    );
+
+    return matchesText && matchesTags;
   });
 }
 // 🔥 TERAZ sprawdzenie
