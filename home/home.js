@@ -312,7 +312,7 @@ if (filterCategory) {
   );
 }
 // 🔍 SEARCH FILTER
-if (searchQuery) {
+if (searchQuery && !filterTag && !filterCategory) {
 
   const words = searchQuery.split(" ").filter(Boolean);
 
