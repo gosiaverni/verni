@@ -28,7 +28,29 @@ body {
 
  
 }
+.review-card {
+  padding: 10px;
+  border-radius: 10px;
+  background: #f7f7f7;
+  cursor: pointer;
+  margin-right: 8px;
+  min-width: 180px;
+}
 
+.review-stars {
+  color: gold;
+  font-size: 14px;
+}
+
+.review-text {
+  font-size: 13px;
+  margin: 6px 0;
+}
+
+.review-meta {
+  font-size: 11px;
+  color: #777;
+}
 /* Gradient border */
 .sidebar::after {
 
@@ -99,7 +121,16 @@ body {
   width: 100%;
   max-width: 100%;
 }
+.review-btn {
+  color: #F28B18;
+}
 
+.review-btn:hover {
+  opacity: 0.7;
+}
+.review-btn svg {
+  transform: translateY(1px);
+}
 /* =========================
    GRID FEED
 ========================= */

@@ -19,6 +19,33 @@ let searchQuery = "";
 // =======================
 // BOOKMARK ICON
 // =======================
+function createStarIcon() {
+
+  const svgNS = "http://www.w3.org/2000/svg";
+
+  const svg = document.createElementNS(svgNS, "svg");
+
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("width", "20");
+  svg.setAttribute("height", "20");
+
+  const path = document.createElementNS(svgNS, "path");
+
+  path.setAttribute(
+    "d",
+    "M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21Z"
+  );
+
+  // 👇 KLUCZOWA ZMIANA (outline jak bookmark)
+  path.setAttribute("fill", "none");
+  path.setAttribute("stroke", "#F28B18");
+  path.setAttribute("stroke-width", "2");
+
+  svg.appendChild(path);
+
+  return svg;
+}
+
 
 function createBookmarkIcon(saved) {
 
@@ -184,69 +211,8 @@ async function removeBookmark(boardId) {
   if (error) console.error(error);
 }
 
-// =======================
-// FETCH OPPORTUNITIES
-// =======================
 
-async function getLatestOpportunities(){
 
-  const { data, error } = await supabaseClient
-  .from("jobs")
-  .select(`
-    id,
-    title,
-    profiles:user_id (
-      handle
-    )
-  `)
-  .order("created_at", { ascending:false })
-  .limit(10)
-
-  if(error){
-    console.error(error)
-    return []
-  }
-
-  return data
-}
-
-// =======================
-// RENDER OPPORTUNITIES ROW
-// =======================
-
-async function renderOpportunitiesRow(){
-
-  const container = document.getElementById("opportunitiesRow")
-
-  if(!container) return
-
-  const opportunities = await getLatestOpportunities()
-
-  opportunities.forEach(job => {
-
-    const pill = document.createElement("div")
-
-    pill.className = "opportunity-pill"
-
-    const handle = job.profiles?.handle
-
-    pill.textContent =
-      handle
-        ? `${job.title} · @${handle}`
-        : job.title
-
-    pill.onclick = () => {
-
-      window.location.href =
-        "../opportunities/opportunities.html"
-
-    }
-
-    container.appendChild(pill)
-
-  })
-
-}
 // =======================
 // RENDER HOME FEED
 // =======================
@@ -459,6 +425,23 @@ commentBtn.onclick = e => {
 
 
 actions.appendChild(commentBtn);
+const reviewBtn = document.createElement("div");
+
+reviewBtn.className = "review-btn";
+
+reviewBtn.appendChild(createStarIcon());
+
+reviewBtn.onclick = e => {
+
+  e.stopPropagation();
+
+  window.location.href =
+    `../reviews/write-review.html?boardId=${item.boardId}`;
+};
+
+actions.appendChild(commentBtn);
+actions.appendChild(reviewBtn); // ⭐ NOWE
+actions.appendChild(bookmark);
 actions.appendChild(bookmark);
 
 header.appendChild(title);
@@ -516,6 +499,89 @@ header.appendChild(actions);
 
 }
 
+async function getLatestReviews(){
+
+  const { data, error } = await supabaseClient
+    .from("reviews")
+    .select(`
+      id,
+      content,
+      rating,
+      created_at,
+      board_id,
+      boards:board_id (
+        name
+      ),
+      profiles:user_id (
+        handle
+      )
+    `)
+    .order("created_at", { ascending:false })
+    .limit(10)
+
+  if(error){
+    console.error(error)
+    return []
+  }
+
+  return data
+}
+
+function createStarsDisplay(rating){
+
+  let stars = "";
+
+  for(let i=0;i<5;i++){
+    stars += i < rating ? "★" : "☆";
+  }
+
+  return stars;
+}
+
+async function renderReviewsRow(){
+
+  const container = document.getElementById("reviewsRow")
+
+  if(!container) return
+
+  container.innerHTML = ""
+
+  const reviews = await getLatestReviews()
+
+  reviews.forEach(review => {
+
+    const card = document.createElement("div")
+
+    card.className = "review-card"
+
+    const handle = review.profiles?.handle || "anon"
+    const boardName = review.boards?.name || "projekt"
+
+    card.innerHTML = `
+      <div class="review-stars">
+        ${createStarsDisplay(review.rating)}
+      </div>
+
+      <div class="review-text">
+        ${review.content.slice(0, 80)}...
+      </div>
+
+      <div class="review-meta">
+        ${boardName} · @${handle}
+      </div>
+    `
+
+    card.onclick = () => {
+      window.location.href =
+        `../whiteboard/public.html?id=${review.board_id}`
+    }
+
+    container.appendChild(card)
+
+  })
+
+}
+
 
 
 // =======================
@@ -526,7 +592,7 @@ header.appendChild(actions);
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  renderOpportunitiesRow();
+
   renderHomeFeed();
 
   const input = document.getElementById("searchInput");
@@ -586,3 +652,4 @@ document.addEventListener("click", e => {
   }
 
 });
+renderReviewsRow();

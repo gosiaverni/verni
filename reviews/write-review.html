@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+
+<meta charset="UTF-8">
+<title>Napisz recenzję</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Karla&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../home/home.css">
+<link rel="stylesheet" href="./write-review.css">
+
+
+</head>
+
+
+<body>
+    <!-- =========================
+     SIDEBAR
+========================= -->
+
+<aside class="sidebar">
+
+  <div class="sidebar-inner">
+
+    <a href="../home/home.html" class="sidebar-logo">
+      <img src="../assets/verni-logo.png" alt="Logo">
+    </a>
+
+    <nav class="sidebar-nav">
+
+      <a href="../whiteboard/whiteboard.html">
+        <img src="../assets/newproject-logo.png" alt="Nowy projekt">
+      </a>
+
+      <a href="../saved/saved.html">
+        <img src="../assets/bookmarks-logo.png" alt="Zapisane">
+      </a>
+
+      <a href="../opportunities/opportunities.html">
+        <img src="../assets/opportunities.png" alt="Opportunities">
+      </a>
+
+      <a href="../profil/profile.html">
+        <img src="../assets/profile-logo.png" alt="Profil">
+      </a>
+
+    </nav>
+
+  </div>
+
+</aside>
+
+<div class="home-wrapper">
+  <div class="container">
+
+  <h1>Napisz recenzję</h1>
+
+  <div id="projectPreview" class="project-preview"></div>
+
+  <div class="rating">
+    <div id="stars"></div>
+  </div>
+
+  <textarea id="content" placeholder="Co myślisz o tym projekcie?"></textarea>
+
+  <button id="submitBtn">Opublikuj</button>
+
+</div> <!-- container -->
+</div> <!-- home-wrapper -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./write-review.js"></script>
+</body>
+</html>
