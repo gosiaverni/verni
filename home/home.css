@@ -142,7 +142,11 @@ body {
   transition: background 0.15s ease,
               opacity 0.15s ease;
 }
-
+.review-title {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
 .review-btn:hover {
 
   opacity: 1;

@@ -94,7 +94,9 @@ function highlight(count) {
 // =======================
 
 async function submitReview() {
-
+  const title =
+  document.getElementById("title").value.trim();
+if (!title) return alert("Dodaj tytuł recenzji");
   const content =
     document.getElementById("content").value.trim();
 
@@ -113,6 +115,7 @@ async function submitReview() {
     .upsert({
       board_id: boardId,
       user_id: userId,
+      title: title,
       content,
       rating
     }, {
@@ -126,6 +129,7 @@ async function submitReview() {
 
   window.location.href =
     `../whiteboard/public.html?id=${boardId}`;
+
 }
 
 // =======================

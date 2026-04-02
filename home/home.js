@@ -562,9 +562,13 @@ async function renderReviewsRow(){
         ${createStarsDisplay(review.rating)}
       </div>
 
-      <div class="review-text">
-        ${review.content.slice(0, 80)}...
-      </div>
+     <div class="review-title">
+  ${review.title || "Bez tytułu"}
+</div>
+
+<div class="review-text">
+  ${review.content.slice(0, 80)}...
+</div>
 
       <div class="review-meta">
         ${boardName} · @${handle}
