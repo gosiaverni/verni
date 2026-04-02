@@ -22,3 +22,22 @@
   opacity: 0.9;
 
 }
+.home-board-preview {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+#projectsList {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+  margin-top: 24px;
+}
+@media (max-width: 900px) {
+  #projectsList {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}

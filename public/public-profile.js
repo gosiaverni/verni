@@ -116,11 +116,22 @@ function renderBoards(boards) {
     li.className = "project-card";
 
     li.innerHTML = `
-      <div class="project-preview">
-        ${b.preview ? `<img src="${b.preview}">` : ""}
-      </div>
-      <div class="project-title">${b.name}</div>
-    `;
+
+  ${b.preview ? `
+    <img
+      class="home-board-preview"
+      src="${b.preview}"
+      loading="lazy"
+    >
+  ` : ""}
+
+  <div class="home-board-header">
+    <div class="home-board-title">
+      ${b.name}
+    </div>
+  </div>
+
+`;
 
     li.onclick = () => {
 
