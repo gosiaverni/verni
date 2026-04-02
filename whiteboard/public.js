@@ -105,9 +105,9 @@ function renderProjectMeta(data) {
 
       <img class="project-avatar" src="${avatar}">
 
-      <div class="project-author">
-        @${handle}
-      </div>
+      <div class="project-author" data-handle="${handle}">
+  @${handle}
+</div>
 
     </div>
 
@@ -138,6 +138,12 @@ function renderProjectMeta(data) {
     ` : ""}
 
   `;
+  const authorEl = container.querySelector(".project-author");
+
+authorEl.onclick = () => {
+  window.location.href =
+    `../public/public-profile.html?handle=${handle}`;
+};
 }
 /* ====== TŁO – prawie 1:1 z Twojego kodu ====== */
 
@@ -338,9 +344,9 @@ div.innerHTML = `
 
       <div class="comment-header">
 
-        <div class="comment-author">
-          @${handle}
-        </div>
+        <div class="comment-author" data-handle="${handle}">
+  @${handle}
+</div>
 
         ${
           isOwner
@@ -359,6 +365,7 @@ div.innerHTML = `
   </div>
 
 `;
+
 if (isOwner) {
 
   const deleteBtn =
@@ -378,6 +385,13 @@ if (isOwner) {
   };
 
 }
+const authorName =
+  div.querySelector(".comment-author");
+
+authorName.onclick = () => {
+  window.location.href =
+    `../public/public-profile.html?handle=${handle}`;
+};
 const avatar =
   div.querySelector(".comment-avatar");
 

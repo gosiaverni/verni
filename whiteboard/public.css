@@ -23,7 +23,16 @@ body {
   height: 100vh;
 
 }
+.project-author,
+.comment-author {
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
 
+.project-author:hover,
+.comment-author:hover {
+  opacity: 0.7;
+}
 
 
 .comments-panel {
