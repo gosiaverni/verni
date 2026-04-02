@@ -505,6 +505,7 @@ async function getLatestReviews(){
     .from("reviews")
     .select(`
       id,
+      title,
       content,
       rating,
       created_at,
