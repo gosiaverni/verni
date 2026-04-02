@@ -122,14 +122,35 @@ body {
   max-width: 100%;
 }
 .review-btn {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 28px;
+
+  height: 28px;
+
+  border-radius: 6px;
+
   color: #F28B18;
+
+  opacity: 0.6;
+
+  transition: background 0.15s ease,
+              opacity 0.15s ease;
 }
 
 .review-btn:hover {
-  opacity: 0.7;
+
+  opacity: 1;
+
+  background: #f3f3f3;
 }
 .review-btn svg {
-  transform: translateY(1px);
+  transform: translateY(-1px);
 }
 /* =========================
    GRID FEED
@@ -147,7 +168,11 @@ body {
 
   width: 100%;
 }
-
+.bookmark-btn svg,
+.comment-btn svg,
+.review-btn svg {
+  display: block;
+}
 
 /* =========================
    PROJECT CARD
@@ -169,7 +194,7 @@ body {
 .project-card:hover {
   transform: translateY(-4px);
 
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 24px #00000014;
 
   border-color: #dddddd;
 }
