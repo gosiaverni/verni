@@ -118,7 +118,7 @@ function renderProjectMeta(data) {
     ` : ""}
 
     ${meta.categories?.length ? `
-      <div class="project-categories">
+  <div class="project-section project-categories">
         ${meta.categories.map(c => `
   <span class="category-pill" onclick="goToCategory('${c}')">
     ${c}
@@ -128,7 +128,7 @@ function renderProjectMeta(data) {
     ` : ""}
 
     ${meta.tags?.length ? `
-      <div class="project-tags">
+  <div class="project-section project-tags">
         ${meta.tags.map(t => `
   <span class="tag-pill" onclick="goToTag('${t}')">
     #${t}

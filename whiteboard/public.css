@@ -23,6 +23,13 @@ body {
   height: 100vh;
 
 }
+/* =========================
+   PROJECT SPACING
+========================= */
+
+.project-section {
+  margin-top: 14px;
+}
 .project-author,
 .comment-author {
   cursor: pointer;
@@ -305,9 +312,17 @@ body {
 .project-meta {
   padding: 24px 32px 8px 32px;
   border-bottom: 1px solid #eee;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
-
+.project-categories,
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.project-meta {
+  border-bottom: 1px solid #f0f0f0;
+}
 .project-header {
   display: flex;
   align-items: center;
