@@ -216,8 +216,34 @@ function loadUserBoards() {
   newTile.className = "project-card project-new";
   newTile.textContent = "+ Nowy projekt";
   newTile.onclick = () => {
-    window.location.href = "../whiteboard/whiteboard.html";
-  };
+
+  const id = "board_" + Date.now();
+
+  const indexKey = `boards:index:${localStorage.getItem("userId")}`;
+  const raw = localStorage.getItem(indexKey);
+
+  let index = raw ? JSON.parse(raw) : { boards: [] };
+
+  index.boards.push({
+    id,
+    name: "Nowy projekt",
+    updated: Date.now(),
+    public: false,
+    meta: {
+      description: "",
+      tags: [],
+      categories: []
+    }
+  });
+
+  index.activeBoardId = id;
+
+  localStorage.setItem(indexKey, JSON.stringify(index));
+
+  localStorage.setItem("openBoard", id); // 🔥 KLUCZ
+
+  window.location.href = "../whiteboard/whiteboard.html";
+};
   list.appendChild(newTile);
 
   // 📁 Istniejące projekty

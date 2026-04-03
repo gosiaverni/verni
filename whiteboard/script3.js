@@ -980,7 +980,7 @@ function applyZoom() {
     boardOffsetX = Math.max(minX, Math.min(maxX, boardOffsetX));
     offsetX = boardOffsetX;
   } else {
-    boardOffsetX = offsetX;
+    
   }
 
   if (boardHeight > rect.height) {
@@ -989,7 +989,7 @@ function applyZoom() {
     boardOffsetY = Math.max(minY, Math.min(maxY, boardOffsetY));
     offsetY = boardOffsetY;
   } else {
-    boardOffsetY = offsetY;
+    
   }
 
   boardInner.style.transform =
@@ -1055,12 +1055,14 @@ function loadBoard(boardId) {
   const raw = localStorage.getItem("board:" + boardId);
 
   activeBoardId = boardId;
+ if (!boardScale) {
   boardScale = DEFAULT_SCALE;
-const rect = board.getBoundingClientRect();
 
-boardOffsetX = (rect.width - 1920 * boardScale) / 2;
-boardOffsetY = (rect.height - 1080 * boardScale) / 2;
-  applyZoom();
+  const rect = board.getBoundingClientRect();
+
+  boardOffsetX = (rect.width - 1920 * boardScale) / 2;
+  boardOffsetY = (rect.height - 1080 * boardScale) / 2;
+}
 
   if (!raw) {
   boardItems = [];
