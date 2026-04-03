@@ -312,12 +312,19 @@ li.appendChild(preview);
 
     // ---------------- visibility ----------------
 
-    const visibility = document.createElement("span");
-    visibility.className = "project-visibility";
-    visibility.textContent = board.public ? "🌍" : "🔒";
-    visibility.title = board.public
-      ? "Projekt publiczny – kliknij aby ustawić jako prywatny"
-      : "Projekt prywatny – kliknij aby ustawić jako publiczny";
+   const visibility = document.createElement("img");
+
+visibility.className = "project-visibility";
+
+visibility.src = board.public
+  ? "../assets/public.png"
+  : "../assets/private.png";
+
+visibility.alt = "visibility";
+
+visibility.title = board.public
+  ? "Projekt publiczny – kliknij aby ustawić jako prywatny"
+  : "Projekt prywatny – kliknij aby ustawić jako publiczny";
 
     visibility.onclick = async (e) => {
       e.stopPropagation();
@@ -325,7 +332,9 @@ li.appendChild(preview);
       board.public = !board.public;
       board.updated = Date.now();
 
-      visibility.textContent = board.public ? "🌍" : "🔒";
+     visibility.src = board.public
+  ? "../assets/public.png"
+  : "../assets/private.png";
 
       localStorage.setItem(indexKey, JSON.stringify(index));
 
