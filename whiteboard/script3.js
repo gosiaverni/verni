@@ -212,10 +212,9 @@ saveProjectMetaBtn.onclick = async () => {
 b.meta = {
   description: projectDescription.value,
   tags: projectTags.value
-    .split(",")
-    .map(t => t.trim().replace(/^#/, "").toLowerCase())
-    .filter(Boolean),
-
+  .split(/[#,\s]+/) // 🔥 KLUCZ
+  .map(t => t.trim().toLowerCase())
+  .filter(Boolean),
   categories: Array.from(projectCategory.selectedOptions).map(o => o.value)
 };
 
