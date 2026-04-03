@@ -393,6 +393,91 @@ header.appendChild(del);
     list.appendChild(li);
   });
 }
+async function getUserReviews() {
+
+  const { data, error } = await supabaseClient
+    .from("reviews")
+    .select(`
+      id,
+      title,
+      content,
+      rating,
+      created_at,
+      board_id,
+      boards:board_id (
+        name
+      )
+    `)
+    .eq("user_id", CURRENT_USER_ID)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  return data;
+}
+
+function createStarsDisplay(rating) {
+  let stars = "";
+
+  for (let i = 0; i < 5; i++) {
+    stars += i < rating ? "★" : "☆";
+  }
+
+  return stars;
+}
+
+async function renderUserReviews() {
+
+  const container = document.getElementById("userReviews");
+
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const reviews = await getUserReviews();
+
+  if (!reviews.length) {
+    container.innerHTML = "<p>Brak recenzji.</p>";
+    return;
+  }
+
+  reviews.forEach(r => {
+
+    const card = document.createElement("div");
+    card.className = "review-card";
+
+    const boardName = r.boards?.name || "projekt";
+
+    card.innerHTML = `
+      <div class="review-stars">
+        ${createStarsDisplay(r.rating)}
+      </div>
+
+      <div class="review-title">
+        ${r.title || "Bez tytułu"}
+      </div>
+
+      <div class="review-text">
+        ${r.content.slice(0, 100)}...
+      </div>
+
+      <div class="review-meta">
+        ${boardName}
+      </div>
+    `;
+
+    card.onclick = () => {
+      window.location.href =
+        `../whiteboard/public.html?id=${r.board_id}`;
+    };
+
+    container.appendChild(card);
+  });
+
+}
 
 function moveBoardAfterPinChange(board) {
 
@@ -549,7 +634,17 @@ if (logoutBtn) {
   })
 
 }
+async function initProfilePage() {
 
+  getOrCreateUserId();
+
+  await loadProfile();
+
+  loadUserBoards();
+
+  await renderUserReviews(); // 🔥 TU
+
+}
 
 /* =======================
    START
@@ -557,3 +652,4 @@ if (logoutBtn) {
 getOrCreateUserId();
 loadProfile();
 loadUserBoards();
+

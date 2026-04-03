@@ -171,7 +171,37 @@ button {
 
 }
 
+.profile-reviews {
+  margin-top: 40px;
+}
 
+.reviews-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+/* reuse review-card ale lekko ulepsz */
+.review-card {
+  min-width: 200px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f7f7f7;
+  cursor: pointer;
+
+  border: 1px solid #eee;
+
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease,
+              border-color 0.2s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px #00000014;
+  border-color: #ddd;
+}
 .hidden {
   display: none;
 }
