@@ -173,13 +173,17 @@ async function renderSavedFeed() {
 
     if (item.preview) {
 
-      const img = document.createElement("img");
+  const previewWrapper = document.createElement("div");
+  previewWrapper.className = "home-preview-wrapper";
 
-      img.className = "home-board-preview";
-      img.src = item.preview;
+  const img = document.createElement("img");
+  img.className = "home-board-preview";
+  img.src = item.preview;
+  img.loading = "lazy";
 
-      li.appendChild(img);
-    }
+  previewWrapper.appendChild(img);
+  li.appendChild(previewWrapper);
+}
 
 
     // header
