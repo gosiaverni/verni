@@ -257,7 +257,7 @@ if (header) {
   } else if (filterCategory) {
     header.textContent = filterCategory;
   } else {
-    header.textContent = "Odkrywaj projekty";
+    ;
   }
 }
 
